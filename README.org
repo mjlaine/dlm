@@ -3,8 +3,7 @@
 See http://helios.fmi.fi/~lainema/dlm/ for details.
 
 Some functions depend on my MCMC toolbox, 
-https://github.com/mjlaine/mcmcstat and
-See http://helios.fmi.fi/~lainema/mcmc/. 
+https://github.com/mjlaine/mcmcstat and http://helios.fmi.fi/~lainema/mcmc/. 
 
 marko.laine@fmi.fi
 
