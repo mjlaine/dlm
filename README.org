@@ -1,0 +1,16 @@
+* DLM toolbox for Matlab
+
+See http://helios.fmi.fi/~lainema/dlm/ for details.
+
+Some functions depend on my MCMC toolbox, 
+https://github.com/mjlaine/mcmcstat and
+See http://helios.fmi.fi/~lainema/mcmc/. 
+
+marko.laine@fmi.fi
+
+#+DESCRIPTION: DLM toolbox readme file
+#+LANGUAGE: en
+#+TITLE: 
+#+OPTIONS: H:3 \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS: TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+OPTIONS: title:nil num:nil toc:nil ^:{} creator:nil author:nil
