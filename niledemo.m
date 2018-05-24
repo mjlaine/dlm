@@ -23,7 +23,7 @@ out = dlmfit(y,s,w);
 %%
 figure(3);
 dlmplotfit(out,t);
-title('Smoothded Nile data')
+title('Smoothed Nile data')
 %%
 figure(2);
 dlmplotdiag(out,t);
