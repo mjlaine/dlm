@@ -66,13 +66,14 @@ subplot(2,1,1);title('prior and posterior for variance parameters');xlabel('para
 subplot(2,1,2);title('');xlabel('parameter w(3,3)')
 
 %%
-% Sample trend statistics form DLM sample. We calculate 10 year (+-5) running trend.
+% Sample trend statistics form DLM sample. We calculate 10 year running trend.
+nyear = 10;
 tsamp = ys*squeeze(dlm_sample(1,:,:)); % sample of levels
-ysm = mean(mean(tsamp'));              % their mean
-ysf = 1/(ysm*10)*100;                  % scale factor to get % change / 10 year
-t10 = mean((tsamp(6*13:end,:)-tsamp(1:end-6*13+1,:))')*ysf; % mean trend
-s10 = std((tsamp(6*13:end,:)-tsamp(1:end-6*13+1,:))')*ysf;  % std in the sample
-time10 = time(3*13:end); time10 = time10(1:length(t10)); % time axis for plot
+ysm = mean(tsamp(:));                   % their mean
+ysf = 1/(ysm*nyear)*100;      % scale factor to get % change / 10 year
+t10 = mean((tsamp(nyear*12+1:end,:)-tsamp(1:end-nyear*12,:))')*ysf; % mean trend
+s10 = std((tsamp(nyear*12+1:end,:)-tsamp(1:end-nyear*12,:))')*ysf;  % std in the sample
+time10 = time(fix(nyear/2)*12+1:end); time10 = time10(1:length(t10)); % time axis for plot
 
 %%
 figure(4); clf
