@@ -1,5 +1,5 @@
 %% Stratospheric ozone time series trend analysis
-% This demo reproduces calculation for article: Laine, M., Latva-Pukkila, N., Kyrölä, E.,
+% This demo reproduces calculation for article: Laine, M., Latva-Pukkila, N., KyrÃ¶lÃ¤, E.,
 % Analyzing time varying trends in stratospheric ozone time series using state space approach, 
 % _Atmospheric Chemistry and Physics Discussion_, *13*, pages 20503-20530, 2013.
 % <http://dx.doi.org/10.5194/acpd-13-20503-2013 doi:10.5194/acpd-13-20503-2013>
