@@ -53,6 +53,7 @@ if not(isfield(options,'fitv')),  options.fitv=0; end % see also options.vcv
 if not(isfield(options,'winds')),  options.winds=[]; end % 
 if not(isfield(options,'logscale')),  options.logscale=1; end % 
 
+if not(isfield(options,'spline')),  options.spline=0; end % test
 
 % These are the defaults used in the dlm acp paper
 if not(isfield(options,'varcv')), options.varcv=[1 1 1 1]; end
@@ -76,6 +77,12 @@ W  = zeros(m,m);      % model error
 
 % input wdiag has diagonal std of W
 for i=1:length(wdiag); W(i,i) = wdiag(i).^2; end
+
+% spline
+if options.order==1 & options.spline
+  W(1:2,1:2) = wdiag(2).^2 .* [1/3 1/2;1/2 1];
+end
+
 
 % try to find sensible initial values (FIX THIS)
 if nargin < 4 || isempty(x0)
