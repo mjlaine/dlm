@@ -1,0 +1,89 @@
+# DLM matlab code org documentation
+
+* Dynamic Linear Model Matlab toolbox
+
+This is a collection of Matlab files for Dynamic Linear Model calculations suitable for time series analysis. The code supplements the article M. Laine, N. Latva-Pukkila and E. Kyrölä: /Analyzing time-varying trends in stratospheric ozone time series using state the space approach/, in Atmospheric Chemistry and Physics 14(18), 2014, [[http://dx.doi.org/10.5194/acp-14-9707-2014][doi: 10.5194/acp-14-9707-2014]].
+
+The code is provided as auxiliary material for the paper and might be useful to you if you are already familiar with Matlab and MCMC and state space analysis of time series. Some references are given at the end.
+
+The toolbox provides tools to estimate dynamic linear state space mode suitable for analysing univariate and multivariate time series. It uses Kalman filter, smoother and simulation smoother to estimate the states and Markov chain Monte Carlo (MCMC) to sample from the model error variance parameter posterior distribution.
+
+See [[file:dlmtut.html][DLM tutorial]] for some info on using this DLM toolbox for time series analysis.
+
+* Downloads
+
+The full Matlab code and this documentation are available from [[https://github.com/mjlaine/dlm][GitHub]]. To install the toolbox clone the folder =dlm= to a suitable directory and then add Matlab path to that directory.
+
+#+BEGIN_EXAMPLE bash
+git clone https://github.com/mjlaine/dlm.git
+#+END_EXAMPLE
+
+Alternatively, you can download the whole repository as a zip file from the GitHub page or directly as
+https://github.com/mjlaine/dlm/archive/master.zip
+
+In addition to the code provided below, you will need my [[https://mjlaine.github.io/mcmcstat/][Matlab MCMC Toolbox]] ([[https://github.com/mjlaine/mcmcstat][direct Github link]]). MCMC is used to infer and sample the variance parameters needed in defining the linear state space model.
+
+The code is distributed under a MIT License and comes with no warranty. The documentation is minimal at the moment. Please read the source code for details of the algorithms used. Question and suggestions are welcome. If you find the code useful, it would be kind to acknowledge me in your research articles.
+
+* Examples
+
+Some examples as Matlab demos.
+
+- [[file:ex/niledemo.html][Nile river flow]] :: Classical Nile river data, file =niledemo.m=.
+- [[file:ex/dlmdemo1.html][DLM demo 1]] :: Fits Kalman smoother and does Gibbs sampling on variance parameters.
+- [[file:ex/dlmdemo2.html][DLM demo 2]] :: Fits synthetic time series with ML optimization.
+- [[file:ex/dlmdemo3.html][DLM demo 3]] :: Fits synthetic multivariate time series.
+- [[file:ex/ozonedemo.html][Ozone time series]] :: Reproduces the fit used in the Ozone time series article.
+
+
+See also example in the the [[file:dlmtut.html][DLM tutorial]].
+
+
+* References
+
+# <<#ref:laine2014>>
+Laine, M., Latva-Pukkila, N., Kyrölä, E.,
+Analyzing time-varying trends in stratospheric ozone time series using the state space approach, /Atmospheric Chemistry and Physics/, *14(18)*, pages 9707--9725, 2014.
+[[http://dx.doi.org/10.5194/acpd-13-20503-2013][doi: 10.5194/acp-14-9707-2014]].
+
+# <<#ref:durbin2011>>
+Durbin, T. and Koopman, S.,/Time Series Analysis by State Space Methods/,
+Oxford University Press, second edn, 2012. 
+[[http://books.google.com/books?vid=ISBN019964117X][Google books link]].
+
+# <<#ref:petris2009>>
+Petris, G., Petrone, S., and Campagnoli, P.,
+/Dynamic Linear Models with R, Use R!/, Springer, 2009.
+[[http://books.google.com/books?vid=ISBN0387772383][Google books link]].
+
+
+#+HTML: <hr>
+
+#
+#+TITLE:     DLM Matlab Toolbox
+#+AUTHOR:    Marko Laine
+#+EMAIL:     marko.laine@fmi.fi
+#+DESCRIPTION: Matlab toolbox for some Dynamic Linear Model calculations
+#+KEYWORDS: DLM, MCMC, time series
+#+LANGUAGE:  en
+# #+ LINK_HOME: http://helios.fmi.fi/~lainema/
+# # +LINK_UP: http://helios.fmi.fi/~lainema/
+# #+HTML_LINK_HOME: http://helios.fmi.fi/~lainema/
+# #+HTML_LINK_UP: http://helios.fmi.fi/~lainema/dlm/
+#+OPTIONS: num:nil toc:nil ^:{} creator:nil timestamp:t author:t
+#+STYLE: <link rel="stylesheet" type="text/css" href="style.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="style.css" />
+#+HTML_MATHJAX: align:"left" mathml:t
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+
+
+# Local Variables:
+# coding: utf-8
+# mode: org
+# eval: (flyspell-mode 1)
+# eval: (visual-line-mode 1)
+# eval: (auto-fill-mode -1)
+# ispell-dictionary: "english"
+# End:
+

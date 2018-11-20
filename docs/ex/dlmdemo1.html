@@ -1,0 +1,269 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>dlmdemo1</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-11-20"><meta name="DC.source" content="dlmdemo1.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; margin-left:5%; margin-right:5%; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:13px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2 id="1">DLM demo no 1</h2><p>Generate synthetic and ideal data and fit a DLM smoother. The command <tt>dlmgensys</tt> generates system evolution matrix <tt>G</tt> and obs operator <tt>F</tt>. We use local level and trend model with 12 seasons.</p><pre class="codeinput">[G,F] = dlmgensys(struct(<span class="string">'order'</span>,1,<span class="string">'fullseas'</span>,1,<span class="string">'ns'</span>,12));
+<span class="comment">% p = number of data sets = 1,</span>
+<span class="comment">% m = number of internal states = 13</span>
+[p,m] = size(F);
+</pre><p>Generate data.</p><pre class="codeinput">t = (1:1:(6*12))'; <span class="comment">% time</span>
+n = length(t);
+s = 0.1; <span class="comment">% obs error std</span>
+V = ones(n,p)*s; <span class="comment">% V is matrix of std's</span>
+x0 = [0;0.001;sin((1:11)/12*pi*2)']; <span class="comment">% initial state</span>
+C0 = 0.02*eye(m)*s^2; <span class="comment">% initial state uncertainty</span>
+W = zeros(m); <span class="comment">% "model error"</span>
+W(1,1) = 0.000002^2;
+W(2,2) = 0.002.^2;
+W(3,3) = 0.02.^2;
+</pre><p>Observations are generated using the state space recursion.</p><pre class="codeinput">y = zeros(n,1);
+x = x0;
+<span class="keyword">for</span> i=1:n
+  y(i) = F*x + randn(1,1)*s;
+  x = G*x + randn(m,1).*sqrt(diag(W));
+<span class="keyword">end</span>
+</pre><p>Function <tt>dlmsmo</tt> calculates the estimated states using Kalman smoother.</p><pre class="codeinput">out = dlmsmo(y,F,V,x0,G,W,C0);
+x0 = out.x(:,1); <span class="comment">% save smoothed estimate of x0</span>
+</pre><p>Plot observations and the fitted level with 95% (time wise) confidence bands.</p><pre class="codeinput">figure(1); clf
+plot(t,out.yhat,<span class="string">'*'</span>)
+hold <span class="string">on</span>
+confband(t,out.x(1,:)',out.xstd(:,1));
+errorbar(t,y,2*V,<span class="string">'ok-'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="5" hspace="5" src="dlmdemo1_01.png" alt=""> <pre class="codeinput">figure(2); clf
+confband(t,out.x(2,:)',out.xstd(:,2)); grid; title(<span class="string">'Trend'</span>)
+</pre><img vspace="5" hspace="5" src="dlmdemo1_02.png" alt=""> <h2 id="7">MCMC</h2><p>Gibbs sampling for the variance parameters using conjugate prior distributions. This takes some time.</p><pre class="codeinput">nsimu = 1000;
+chain = zeros(nsimu,4);
+W0 = W; <span class="comment">% prior W</span>
+n0 = 5; <span class="comment">% prior weight</span>
+V0 = s;
+nv0 = 10;
+doplot = 1;
+plotint = 100;
+</pre><pre class="codeinput">hw = waitbar(0,<span class="string">'MCMC running, please wait'</span>);
+<span class="keyword">for</span> isimu = 1:nsimu
+  waitbar(isimu/nsimu,hw);
+  <span class="comment">% Gibbs step for variance parameters</span>
+  <span class="comment">% residual std for V, conjugate distribution is inverse chi squared</span>
+  sigV = sqrt(invchir(1,1,n+nv0,(out.ssy+V0.^2*nv0)/(n+nv0)));
+  V = ones(n,p)*sigV;
+  out = dlmsmo(y,F,V,x0,G,W,C0); <span class="comment">% recalculate with new V</span>
+  <span class="comment">% variances in diag(W)</span>
+  c = zeros(1,3); <span class="comment">% fit 3 first variances</span>
+  <span class="keyword">for</span> i=1:3
+    c(i) = invchir(1,1,n+n0-1,(W0(i,i).*n0+out.ss(i))./(n+n0-1));
+    W(i,i) = c(i);
+    out = dlmsmo(y,F,V,x0,G,W,C0);  <span class="comment">% recalculate smoother</span>
+  <span class="keyword">end</span>
+  chain(isimu,:) = [sigV,sqrt(c(1:3))];
+  <span class="keyword">if</span> doplot &amp; (isimu/plotint == fix(isimu/plotint))
+    <span class="comment">% plot every plotint'th MCMC sampled state</span>
+    figure(1);
+    hold <span class="string">on</span>
+    plot(t,out.xr(1,:),<span class="string">'-r'</span>)
+    hold <span class="string">off</span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+close(hw);
+</pre><img vspace="5" hspace="5" src="dlmdemo1_03.png" alt=""> <pre class="codeinput">figure(3); clf
+mcmcplot(chain,[],{<span class="string">'V'</span>,<span class="string">'W1'</span>,<span class="string">'W2'</span>,<span class="string">'W3'</span>});
+hold <span class="string">on</span>
+subplot(2,2,1); h=hline(s);set(h,<span class="string">'linestyle'</span>,<span class="string">'-'</span>,<span class="string">'linewidth'</span>,2)
+subplot(2,2,2); h=hline(sqrt(W0(1,1)));set(h,<span class="string">'linestyle'</span>,<span class="string">'-'</span>,<span class="string">'linewidth'</span>,2)
+subplot(2,2,3); h=hline(sqrt(W0(2,2)));set(h,<span class="string">'linestyle'</span>,<span class="string">'-'</span>,<span class="string">'linewidth'</span>,2)
+subplot(2,2,4); h=hline(sqrt(W0(3,3)));set(h,<span class="string">'linestyle'</span>,<span class="string">'-'</span>,<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span>
+
+V = ones(n,p)*sqrt(mean(chain(:,1).^2));
+<span class="keyword">for</span> i=1:3;  W(i,i) = mean(chain(:,i+1).^2); <span class="keyword">end</span>
+
+out = dlmsmo(y,F,V,x0,G,W,C0);
+</pre><img vspace="5" hspace="5" src="dlmdemo1_04.png" alt=""> <p>Add estimated over the initial trend.</p><pre class="codeinput">figure(2);
+ind = 2; <span class="comment">%</span>
+xxx = out.x(ind,:)';
+hold <span class="string">on</span>
+plot(t,xxx)
+plot(t,xxx-2*out.xstd(:,ind),<span class="string">'g-'</span>)
+plot(t,xxx+2*out.xstd(:,ind),<span class="string">'g-'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="5" hspace="5" src="dlmdemo1_05.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% DLM demo no 1
+% Generate synthetic and ideal data and fit a DLM smoother.
+% The command |dlmgensys| generates system evolution matrix |G| 
+% and obs operator |F|. We use local level and trend model with 12 seasons.
+[G,F] = dlmgensys(struct('order',1,'fullseas',1,'ns',12));
+% p = number of data sets = 1, 
+% m = number of internal states = 13
+[p,m] = size(F);
+
+%%
+% Generate data.
+t = (1:1:(6*12))'; % time 
+n = length(t);
+s = 0.1; % obs error std
+V = ones(n,p)*s; % V is matrix of std's
+x0 = [0;0.001;sin((1:11)/12*pi*2)']; % initial state
+C0 = 0.02*eye(m)*s^2; % initial state uncertainty
+W = zeros(m); % "model error"
+W(1,1) = 0.000002^2;
+W(2,2) = 0.002.^2;
+W(3,3) = 0.02.^2;
+
+%%
+% Observations are generated using the state space recursion.
+y = zeros(n,1);
+x = x0;
+for i=1:n
+  y(i) = F*x + randn(1,1)*s;
+  x = G*x + randn(m,1).*sqrt(diag(W));
+end
+
+%% 
+% Function |dlmsmo| calculates the estimated states using Kalman smoother.
+out = dlmsmo(y,F,V,x0,G,W,C0);
+x0 = out.x(:,1); % save smoothed estimate of x0
+
+%% 
+% Plot observations and the fitted level with 95% (time wise) confidence bands.
+figure(1); clf
+plot(t,out.yhat,'*')
+hold on
+confband(t,out.x(1,:)',out.xstd(:,1));
+errorbar(t,y,2*V,'ok-')
+hold off
+
+%%
+figure(2); clf
+confband(t,out.x(2,:)',out.xstd(:,2)); grid; title('Trend')
+
+%% MCMC
+% Gibbs sampling for the variance parameters using conjugate prior distributions. This takes some time.
+nsimu = 1000;
+chain = zeros(nsimu,4);
+W0 = W; % prior W
+n0 = 5; % prior weight
+V0 = s;
+nv0 = 10;
+doplot = 1;
+plotint = 100;
+
+%%
+hw = waitbar(0,'MCMC running, please wait');
+for isimu = 1:nsimu
+  waitbar(isimu/nsimu,hw);
+  % Gibbs step for variance parameters
+  % residual std for V, conjugate distribution is inverse chi squared
+  sigV = sqrt(invchir(1,1,n+nv0,(out.ssy+V0.^2*nv0)/(n+nv0)));
+  V = ones(n,p)*sigV;
+  out = dlmsmo(y,F,V,x0,G,W,C0); % recalculate with new V
+  % variances in diag(W)
+  c = zeros(1,3); % fit 3 first variances
+  for i=1:3
+    c(i) = invchir(1,1,n+n0-1,(W0(i,i).*n0+out.ss(i))./(n+n0-1));
+    W(i,i) = c(i); 
+    out = dlmsmo(y,F,V,x0,G,W,C0);  % recalculate smoother 
+  end
+  chain(isimu,:) = [sigV,sqrt(c(1:3))];
+  if doplot & (isimu/plotint == fix(isimu/plotint))
+    % plot every plotint'th MCMC sampled state
+    figure(1);
+    hold on
+    plot(t,out.xr(1,:),'-r')
+    hold off
+  end
+end
+close(hw);
+
+%%
+figure(3); clf
+mcmcplot(chain,[],{'V','W1','W2','W3'});
+hold on
+subplot(2,2,1); h=hline(s);set(h,'linestyle','-','linewidth',2)
+subplot(2,2,2); h=hline(sqrt(W0(1,1)));set(h,'linestyle','-','linewidth',2)
+subplot(2,2,3); h=hline(sqrt(W0(2,2)));set(h,'linestyle','-','linewidth',2)
+subplot(2,2,4); h=hline(sqrt(W0(3,3)));set(h,'linestyle','-','linewidth',2)
+hold off
+
+V = ones(n,p)*sqrt(mean(chain(:,1).^2));
+for i=1:3;  W(i,i) = mean(chain(:,i+1).^2); end
+
+out = dlmsmo(y,F,V,x0,G,W,C0);
+
+%% 
+% Add estimated over the initial trend.
+figure(2);
+ind = 2; %
+xxx = out.x(ind,:)';
+hold on
+plot(t,xxx)
+plot(t,xxx-2*out.xstd(:,ind),'g-')
+plot(t,xxx+2*out.xstd(:,ind),'g-')
+hold off
+
+##### SOURCE END #####
+--></body></html>

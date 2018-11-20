@@ -1,0 +1,121 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Classical Nile data</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-11-20"><meta name="DC.source" content="niledemo.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; margin-left:5%; margin-right:5%; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:13px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Classical Nile data</h1><p>Here we fit the classical Nile river flow data</p><pre class="codeinput">y = [1120 1160  963 1210 1160 1160  813 1230 1370 1140  995  935 <span class="keyword">...</span>
+     1110  994 1020  960 1180  799  958 1140 1100 1210 1150 1250 <span class="keyword">...</span>
+     1260 1220 1030 1100  774  840  874  694  940  833  701  916 <span class="keyword">...</span>
+     692 1020 1050  969  831 726  456  824  702 1120 1100  832  764 <span class="keyword">...</span>
+     821  768  845 864  862 698  845  744  796 1040  759  781  865 <span class="keyword">...</span>
+     845  944  984  897  822 1010  771  676  649  846  812  742  801 <span class="keyword">...</span>
+     1040  860  874 848  890  744  749  838 1050  918  986  797  923 <span class="keyword">...</span>
+     975  815 1020  906  901 1170  912  746  919  718  714  740]';
+
+t = (1871:1970)'; <span class="comment">% time</span>
+</pre><p>Observation and model errors match those in Petris et al. (2009)</p><pre class="codeinput">s = sqrt(15100);
+w = sqrt([755 755]);
+</pre><p>Fit the DLM model</p><pre class="codeinput">out = dlmfit(y,s,w);
+</pre><pre class="codeinput">figure(3);
+dlmplotfit(out,t);
+title(<span class="string">'Smoothed Nile data'</span>)
+</pre><img vspace="5" hspace="5" src="niledemo_01.png" alt=""> <pre class="codeinput">figure(2);
+dlmplotdiag(out,t);
+</pre><img vspace="5" hspace="5" src="niledemo_02.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Classical Nile data
+% Here we fit the classical Nile river flow data
+
+y = [1120 1160  963 1210 1160 1160  813 1230 1370 1140  995  935 ...
+     1110  994 1020  960 1180  799  958 1140 1100 1210 1150 1250 ...
+     1260 1220 1030 1100  774  840  874  694  940  833  701  916 ...
+     692 1020 1050  969  831 726  456  824  702 1120 1100  832  764 ...
+     821  768  845 864  862 698  845  744  796 1040  759  781  865 ...
+     845  944  984  897  822 1010  771  676  649  846  812  742  801 ...
+     1040  860  874 848  890  744  749  838 1050  918  986  797  923 ...
+     975  815 1020  906  901 1170  912  746  919  718  714  740]';
+
+t = (1871:1970)'; % time
+
+%%
+% Observation and model errors match those in Petris et al. (2009)
+s = sqrt(15100);
+w = sqrt([755 755]);
+
+%%
+% Fit the DLM model
+out = dlmfit(y,s,w);
+%%
+figure(3);
+dlmplotfit(out,t);
+title('Smoothed Nile data')
+%%
+figure(2);
+dlmplotdiag(out,t);
+
+
+##### SOURCE END #####
+--></body></html>

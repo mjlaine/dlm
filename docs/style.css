@@ -1,0 +1,123 @@
+/* borrowed from org.css */
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans|Droid+Sans+Mono|Droid+Serif);
+
+html {
+    margin: 0;
+    font: 300 .9em/1.6em "Droid Serif", "Open Sans", Cambria, Georgia, "DejaVu Serif", serif;
+}
+
+BODY {
+/* font-family: Verdana, Arial, helvetica, sans-serif; */
+/* font-family: sans-serif;*/
+ color: black;
+ background: #fffaf0 /* white */; 
+ margin-top: 1em;
+ margin-bottom: 1em;
+ margin-left: 10%;
+ margin-right: 10%;
+}
+P, TD, DL, UL, OL {
+/* font-family: Verdana, Arial, helvetica, sans-serif;*/
+/* font-family: sans-serif;*/
+/*  margin-left:  0%;
+    margin-right: 0%; */
+ text-indent: 0cm;
+}
+H1 { 
+ font-weight: bold;
+ font-size: 200%;
+ margin-left: 0%;
+ margin-right: 0%;
+ color: brown;
+}
+H2 { 
+ font-weight: bold;
+ font-size: 120%; 
+ color: brown; 
+/* margin-bottom: -1em; */
+}
+H3 { 
+ font-weight: bold;
+ font-size: 100%; 
+ color: brown; 
+}
+H4 { 
+ font-weight: bold;
+ font-size: 100%; 
+ color: brown; 
+}
+/*
+PRE {
+  font-family: courier, monospace;
+  white-space: pre;
+}
+*/
+
+code {
+    font-family: "Droid Sans Mono";
+/*    background-color: #eeeeee;*/
+/*    padding: 2pt;*/
+/*    margin-right: 1pt;*/
+/*    box-shadow: 1px 1px 1px #aaa;*/
+}
+
+pre {
+    font-family: "Droid Sans Mono";
+    font-size: .8em;
+    font-weight: normal;
+    line-height: 1.4em;
+    background-color: #eeeeee;
+    padding: 2pt;
+    margin-right: 1pt;
+    box-shadow: 1px 1px 1px #aaa;
+}
+
+pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 0.2em;
+}
+
+pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+}
+
+pre.src-matlab:before   { content: 'Matlab'; }
+
+
+/*
+pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+    background: #eeeeee;
+}
+*/
+
+A         {text-decoration: none;}
+A:link    {color: #cc0000;}
+A:visited {color: #cc0099;}
+A:active  {color: #ff3300;}
+A:hover   {color: #ff3300;}
+
+/* green */
+A:link    {color: #993300;}
+A:visited {color: #993300;}
+A:active  {color: #336666;} /* #00ccff; */
+A:hover   {color: #336666; /*  background: #ffffff; */}
+
+
+P:date { 
+/* font-family: Verdana, Arial, helvetica, sans-serif;*/
+/* font-family: sans-serif;*/
+ font-size: 80%;text-align: left;}
+

@@ -1,0 +1,208 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>DLM demo no 2, testing DLM functions</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-11-20"><meta name="DC.source" content="dlmdemo2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; margin-left:5%; margin-right:5%; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:13px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>DLM demo no 2, testing DLM functions</h1><!--introduction--><p>Generate seasonal data and fit DLM model with 12 seasons.</p><!--/introduction--><p>Data</p><pre class="codeinput">t = (1:1:(6*12))'; <span class="comment">% time</span>
+n = length(t);
+s = 0.1; <span class="comment">% obs error std</span>
+y = 2 + 0.5*(t-0)/12.*((t-0)&lt;2*12)    + <span class="keyword">...</span>
+        0.5*(2*12)/12.*((t-0)&gt;=2*12)  + <span class="keyword">...</span>
+        0.8*sin((t-0)/12*2*pi) + <span class="keyword">...</span>
+     randn(n,1)*s;
+</pre><pre class="codeinput">figure(1); clf
+plot(t,y,<span class="string">'o-'</span>); xlabel(<span class="string">'time'</span>); ylabel(<span class="string">'y'</span>); title(<span class="string">'observations'</span>);grid;
+</pre><img vspace="5" hspace="5" src="dlmdemo2_01.png" alt=""> <p>Model error diagonal, first non zero values.</p><pre class="codeinput">w123 = [0.0000,3.1e-5,1e-8,1e-8,1e-8,1e-8];
+</pre><p>Options for <tt>dlmfit</tt> function. Use harmonic functions with 2 components and 12 seasons. Optimize some variance parameters using maximum likelihood.</p><pre class="codeinput">clear <span class="string">options</span>
+options.ns = 12;
+options.trig = 2;
+options.opt = 1;
+options.winds = [0 1 2 2 2 2];
+</pre><p>DLM fit.</p><pre class="codeinput">out = dlmfit(y,s,w123,[],[],[],options);
+</pre><pre class="codeoutput"> 
+ Iteration   Func-count     min f(x)         Procedure
+     0            1          56.4488         
+     1            3          56.4488         initial simplex
+     2            5          48.2807         expand
+     3            7          33.1171         expand
+     4            9         -166.988         expand
+     5           11         -214.797         expand
+     6           13         -214.797         contract outside
+     7           15         -214.797         contract inside
+     8           17         -214.797         contract inside
+     9           19         -216.244         contract inside
+    10           21         -217.027         contract inside
+    11           22         -217.027         reflect
+    12           24         -217.027         contract inside
+    13           26         -217.027         contract inside
+    14           28         -217.027         contract inside
+    15           30         -217.044         contract inside
+    16           31         -217.044         reflect
+    17           33         -217.044         contract inside
+    18           35         -217.045         contract outside
+    19           37         -217.046         contract inside
+    20           38         -217.046         reflect
+    21           40         -217.046         contract inside
+    22           42         -217.046         contract inside
+    23           44         -217.046         contract inside
+    24           46         -217.046         contract inside
+    25           48         -217.046         contract outside
+    26           50         -217.046         contract inside
+    27           51         -217.046         reflect
+    28           53         -217.046         contract inside
+    29           54         -217.046         reflect
+    30           56         -217.046         contract inside
+    31           58         -217.046         contract outside
+    32           60         -217.046         contract inside
+    33           61         -217.046         reflect
+    34           63         -217.046         contract inside
+    35           65         -217.046         contract inside
+    36           67         -217.046         contract inside
+    37           68         -217.046         reflect
+    38           70         -217.046         contract inside
+    39           71         -217.046         reflect
+    40           73         -217.046         contract inside
+    41           75         -217.046         contract outside
+    42           77         -217.046         contract inside
+    43           78         -217.046         reflect
+    44           80         -217.046         contract inside
+    45           82         -217.046         contract inside
+    46           84         -217.046         contract outside
+    47           86         -217.046         contract inside
+    48           88         -217.046         contract inside
+    49           90         -217.046         contract inside
+    50           94         -217.046         shrink
+    51           98         -217.046         shrink
+    52          102         -217.046         shrink
+    53          104         -217.046         contract outside
+    54          106         -217.046         contract outside
+    55          110         -217.046         shrink
+    56          112         -217.046         contract inside
+    57          116         -217.046         shrink
+ 
+Optimization terminated:
+ the current x satisfies the termination criteria using OPTIONS.TolX of 1.000000e-04 
+ and F(X) satisfies the convergence criteria using OPTIONS.TolFun of 1.000000e-04 
+
+
+woptv =
+
+  0x1 empty double column vector
+
+
+woptw =
+
+    0.0085116
+   1.3657e-09
+
+
+woptg =
+
+  0x1 empty double column vector
+
+</pre><p>Default plots.</p><pre class="codeinput">dlmplot(out);
+</pre><img vspace="5" hspace="5" src="dlmdemo2_02.png" alt=""> <img vspace="5" hspace="5" src="dlmdemo2_03.png" alt=""> <img vspace="5" hspace="5" src="dlmdemo2_04.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% DLM demo no 2, testing DLM functions
+% Generate seasonal data and fit DLM model with 12 seasons.
+
+%% 
+% Data
+t = (1:1:(6*12))'; % time 
+n = length(t);
+s = 0.1; % obs error std 
+y = 2 + 0.5*(t-0)/12.*((t-0)<2*12)    + ...
+        0.5*(2*12)/12.*((t-0)>=2*12)  + ...
+        0.8*sin((t-0)/12*2*pi) + ...
+     randn(n,1)*s;
+
+%%
+figure(1); clf
+plot(t,y,'o-'); xlabel('time'); ylabel('y'); title('observations');grid;
+
+%% 
+% Model error diagonal, first non zero values.
+w123 = [0.0000,3.1e-5,1e-8,1e-8,1e-8,1e-8];
+
+%%
+% Options for |dlmfit| function. Use harmonic functions with 2
+% components and 12 seasons. Optimize some variance parameters using maximum likelihood.
+clear options
+options.ns = 12;
+options.trig = 2;
+options.opt = 1;
+options.winds = [0 1 2 2 2 2];
+
+%% 
+% DLM fit.
+out = dlmfit(y,s,w123,[],[],[],options);
+%%
+% Default plots.
+dlmplot(out);
+
+
+##### SOURCE END #####
+--></body></html>
