@@ -1,0 +1,1518 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-11-21 Ke 09:41 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dynamic linear model tutorial</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Marko Laine" />
+<meta name="description" content="Dynamic linear model tutorial and Matlab toolbox"
+ />
+<meta name="keywords" content="DLM" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "left",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="http://helios.fmi.fi/~lainema/dlm/"> UP </a>
+ |
+ <a accesskey="H" href="http://helios.fmi.fi/~lainema/"> HOME </a>
+</div><div id="content">
+<h1 class="title">Dynamic linear model tutorial</h1>
+<div id="outline-container-org0b749ad" class="outline-2">
+<h2 id="org0b749ad"><span class="section-number-2">1</span> Dynamic linear models</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+This text gives an introduction to using state space based dynamic regression analysis of time series. We are especially interested in extracting trends in climatic observations. The computer examples are given using my <a href="index.html">DLM toolbox</a> for Matlab.
+</p>
+</div>
+
+<div id="outline-container-org2d1668c" class="outline-3">
+<h3 id="org2d1668c"><span class="section-number-3">1.1</span> Introduction</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Statistical analysis of time series data is usually faced with the fact that we have only one realization of a process whose properties we might not fully understand. In analysis of correlation structures, for example, we need to assume that some distributional properties of the process generating the variability stay unchanged in time. In linear trend analysis, we assume that there is an underlying change in the background that stays approximately constant over time. Dynamic regression with state space approach tries to avoid some of the problems. By explicitly allowing for variability in the regression coefficients we let the system properties change in time. Furthermore, the use of unobservable state variables allows direct modelling of the processes that are driving the observed variability, such as seasonality or external forcing, and we can explicitly allow for some modelling error.
+</p>
+
+<p>
+Dynamic regression can, in very general terms, be formulated  using state space representation of the of the observations and the state of the system. With a  sequential definition of the processes, having conditional dependence only on the previous time step, the classical Kalman filter formulas can be used to estimate the states given the observations. When the operators involved in the definition of the system are linear we have so called dynamic linear model, DLM.
+</p>
+
+<p>
+A basic model for many climatic time series consists of four elements: slowly varying background level, seasonal component, external forcing of known processes modelled by proxy variables, and stochastic noise. The noise components might contain an autoregressive correlation structure to account for correlated model residuals. However, autocorrelated errors can be problematic as they might be caused by a long memory of the process as well as by some systematic features not included in the model.
+</p>
+
+<p>
+This is a short tutorial on using dynamic linear models in time series analysis. It is based on my attempts to analyse some climatic time series. For that purposes I wrote the Matlab code described here. The examples deal with univariate time series, but the code can handle multivariate data, to some extent. Here we are mostly interested in extracting the components, and using these to infer about some interesting features of the system, but not to produce predictions about the behaviour of the system in the future, although understanding the system is a first step to be able to make predictions.
+</p>
+
+<p>
+The use of DLMs in time series analysis is well documented in statistical literature, see the references at the end.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1536e93" class="outline-3">
+<h3 id="org1536e93"><span class="section-number-3">1.2</span> State space description</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+General dynamic linear model can be written with a help of observation
+equation and model equation as
+</p>
+\begin{eqnarray*}
+\label{dlmDef1}
+  y_{t} &=& F_{t}x_{t}+v_{t},\quad  v_{t}\sim
+  N(0,V_{t}), \\ \label{dlmDef2}
+  x_{t} &=& G_{t}x_{t-1}+w_{t},\quad  w_{t}\sim N(0,W_{t}).
+\end{eqnarray*}
+
+<p>
+Above \(y_{t}\) are the observations at time \(t\), with \(t=1,\dots,n\).
+Vector \(x_{t}\) of length \(m\) contains the unobserved states of the system that are assumed to evolve in time according to a linear <i>system operator</i> \(G_{t}\) (a \(m\times m\) matrix). In time series settings \(x_t\) will have elements corresponding to various components of the  time series process, like trend, seasonality, etc. We observe a linear combination of the states with noise and matrix \(F_{t}\) (\(m\times p\)) is the <i>observation operator</i> that transforms the model states into observations.  Both observation end system equations can have additive Gaussian errors with covariance matrices \(V_{t}\) and \(W_{t}\).
+</p>
+
+<p>
+This formulation is quite general and flexible and it allows handling of many time series analysis problems in a single framework. Moreover, an unified computational tool can be used, i.e.  a single DLM computer code can be used for various purposes. Below we give examples of different analyses.
+As we are dealing with linear models, we assume that the operators \(G_{t}\) and \(F_{t}\) are linear, i.e.  matrices. However, they can change with the time index \(t\). The state space framework can be extended to non linear model and non Gaussian errors, and to spatial-temporal analyses as well, see, e.g., Cressie.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2d35225" class="outline-3">
+<h3 id="org2d35225"><span class="section-number-3">1.3</span> DLM as hierarchical statistical model</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+The DLM formulation can be seen as a special case of a general hierarchical statistical model with three levels: data, process and parameters (see e.g. Cressie). In terms of statistical distributions we have, first, the observations uncertainty \(p(y_{t}|x_{t},\theta)\) described by the observation equation. Second, the process uncertainty of the unknown states \(x_{t}\) and their evolution given by the process equations as \(p(x_{t}|\theta)\), and third, the uncertainty related to model parameters \(p(\theta)\). These conditional formulations allows both efficient description of the system and computational tools to estimate its components. It also combines different statistical approaches, as we can have full prior probabilities for the unknowns (Bayesian approach), estimate them by maximum likelihood and plug them back (frequentistic approach), or even fix the model parameters by expert knowledge (a trivial non statistical approach).
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8b2ee83" class="outline-3">
+<h3 id="org8b2ee83"><span class="section-number-3">1.4</span> State and parameter estimation</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+Recall that \(y_{t}\) are the observations and \(x_{t}\) the hidden system states for \(t=1,\dots,n\). In addition, we have (static) model parameter \(\theta\) that contains auxiliary parameters needed in defining the model and observation errors \(W_{t}\) and \(V_{t}\) and the system matrices \(G_{t}\) and \(F_{t}\). For dynamic linear models we have efficient and well founded computational tools for all the relevant statistical distributions.
+</p>
+
+<ul class="org-ul">
+<li>\(p(x_{t+1}|x_{t},y_{1:t},\theta)\) by Kalman filter</li>
+<li>\(p(x_{t}|y_{1:t},\theta)\) by Kalman filter</li>
+<li>\(p(x_t|y_{1:n},\theta)\) by Kalman smoother</li>
+<li>\(p(x_{1:n}|y_{1:n},\theta)\) by simulation smoother</li>
+<li>\(p(y_{1:t}|\theta)\) by Kalman filter likelihood</li>
+<li>\(p(x_{1:n},\theta|y_{1:n})\) by MCMC</li>
+<li>\(p(x_{1:n}|y_{1:n})\) by MCMC</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org6f40527" class="outline-3">
+<h3 id="org6f40527"><span class="section-number-3">1.5</span> Recursive Kalman formulas</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+Here are the relevant parts of the recursive formulas for Kalman filter and smoother to estimate the marginal distributions of DLM states given the observations. We assume that the initial distributions at \(t=1\) are available.
+First, we perform Kalman filter forward recursion for the predicted states
+\(p(x_{t+1}|x_{t},y_{1:t},\theta) = N(\hat{x}_{t+1},\hat C_{t+1})\),
+\(t=1,2,\dots,n-1\)
+</p>
+
+\begin{align*}
+    v_t &= y_t -F_t\hat{x}_t &\text{prediction error}\\
+    C^y_t &= F_t\hat C_tF^T + V_t &\text{prediction error covariance}\\
+    K_t &= G_{t}\hat C_tF^T C_t^{y-1} &\text{Kalman gain}\\
+    \hat{x}_{t+1} &= G\hat{x}_t + K_tv_t&\text{next state prior mean}\\
+    \hat C_{t+1} &=  G_t\hat C_t(G_t-K_tF_t)^T +W&\text{next state prior covariance}
+\end{align*}
+<p>
+Then, we apply Kalman smoother backward recursion to obtain the smoothed states
+\(p(x_t|y_{1:n},\theta) = N(\tilde{x}_t,\tilde C_t)\), for \(t=n,n-1,\dots,2,1\)
+</p>
+
+\begin{align*}
+    L &= G_t - K_tF_t\\
+    r &= F_t^T C^{y-1}_t v_t + L^T r\\
+    N &= F_t^T C^{y-1}_t F_t + L^T N L\\
+    \tilde{x}_t &= \hat{x}_t + \hat C_tr &\text{smoothed state mean}\\
+    \tilde C_t &= \hat C_t - \hat C_tN\hat C_t &\text{smoothed state covariance}
+\end{align*}
+
+<p>
+Both these recursion are implemented in <code>dlmsmo.m</code> Matlab code.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga6d4d9b" class="outline-3">
+<h3 id="orga6d4d9b"><span class="section-number-3">1.6</span> Simulation smoother</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+Kalman smoother algorithm provides the marginal distributions \(p(x_{t}|y_{1:n},\theta)\) for each \(t\). These are all Gaussian. However, for studying trends and other dynamic features in the system, we are interested in the joint distribution spanning the whole time range \(p(x_{1:n}|y_{1:n},\theta)\). Note that we are still conditioning on the unknown parameter vector \(\theta\) and will account for it later. This very high dimensional joint distribution is not easily accessible directly. As in many cases, instead of analytic expressions, it is more important to be able to draw realizations from the distribution.
+</p>
+
+<p>
+The system equations provide a direct way to recursively produce realizations of both the states \(x_{1:n}\) and the observations \(y_{1:n}\). However, the generated states will be independent of the original observations. It can be shown (<a href="#org415d25a">Durbin &amp; Koopman</a>, Section 4.9) that the residual process of generated vs.  smoothed state is independent of the \(\tilde{x}_{1:n}\) and \(\tilde{y}_{1:n}\). This means that if we add these residuals over the smoothed state \(x_{1:n}\), we get a new realization that is conditional on \(y_{1:n}\), the original observations. So to produce \({x}^*_{1:n} \sim p(x_{1:n}|y_{1:n},\theta)\), we:
+</p>
+
+<ol class="org-ol">
+<li>Sample from the system equations to get \(\tilde{x}_{1:n}\) and \(\tilde{y}_{1:n}\).</li>
+<li>Smooth \(\tilde{y}_{1:n}\) to get \(\tilde{\tilde{x}}_{1:n}\).</li>
+<li>Add the residuals to the original smoothed state,
+\({x}^*_{1:n} = \tilde{x}_{1:n} - \tilde{\tilde{x}}_{1:n} + {x}_{1:n}\).</li>
+</ol>
+
+<p>
+This simulation smoother will be used in trend studies and as a part of more general simulation algorithm that will sample from the joint posterior distribution \(p(x_{1:n},\theta|y_{1:n})\), and by marginalization argument also from \(p(x_{1:n}|y_{1:n})\) where the uncertainty in \(\theta\) has been integrated out. Simulation smoother is implemented in <code>dlmsmo</code> and <code>dlmsmosam</code> functions. As a note, the simulation smoother can be seen as a special case of the randomize-then-optimize (RTO) method in <a href="http://dx.doi.org/10.1137/140964023">Bardsley et al. (2104)</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5d7c4c3" class="outline-3">
+<h3 id="org5d7c4c3"><span class="section-number-3">1.7</span> Analysing trends</h3>
+<div class="outline-text-3" id="text-1-7">
+<p>
+In general terms, trend is some change in the distributional properties, such as in the mean, of the process generating the observations. We are typically interested in slowly varying changes in the background level, i.e.  in the mean process after known sources of variability, such as seasonality, have been accounted for.
+A common way to explore trends is to fit some kind of a smoother, such as a moving average, over the time series. Many smoothing methods do not provide statistical ways to estimate the smoothness parameters or asses the uncertainty related to the level of smoothing.
+</p>
+
+<p>
+In DLM trend analysis, a slowly varying (relative to the time scale we are interested in) background level of the system is modelled as a random walk process with variance parameters that determine the time wise smoothness of the level. These variance parameters must be estimated. In an optimal case, the data provides information also on the smoothness of the trend component, but sometimes we need to use subject level prior information to decide the time scale of the changes we want to extract. DLM models offer means of providing qualitative prior information in the form of the model equations and quantitative information by prior distributions on variance parameters, see (Gamermann).
+</p>
+
+<p>
+Let \(x_{\mathrm{level},t}\) be the model state that defines the background level of the process. For statistical analysis, we need to estimate the whole state, as either \(p(x_{1:n}|y_{1:n},\hat{\theta})\), where we plug in some estimates of the auxiliary parameters \(\theta\), (maximum likelihood approach) or by \(p(x_{1:n}|y_{1:n}) = \int p(x_{1:n},\theta|y_{1:n})\,d\theta\) where the uncertainty of auxiliary parameters \(\theta\) are integrated out (Bayesian approach). The latter is typically done by Markov chain Monte Carlo (MCMC) simulation.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org01c9398" class="outline-3">
+<h3 id="org01c9398"><span class="section-number-3">1.8</span> Examples</h3>
+<div class="outline-text-3" id="text-1-8">
+</div>
+<div id="outline-container-orge467c83" class="outline-4">
+<h4 id="orge467c83"><span class="section-number-4">1.8.1</span> Spline smoothing</h4>
+<div class="outline-text-4" id="text-1-8-1">
+<p>
+A simple level and trend model can be used as a basis for many trend related studies. In terms of local level \(\mu_{t}\) and local trend \(\alpha_{t}\) it can be written as
+</p>
+\begin{align*}
+  y_t &= \mu_{t} + \epsilon_\mathrm{obs}, &\epsilon_\mathrm{obs}\sim N(0,\sigma^2_\mathrm{obs}),  &\text{ observations}\\
+  \mu_{t} &= \mu_{t-1} + \alpha_{t-1} + \epsilon_\mathrm{level},
+  & \epsilon_\mathrm{level}\sim N(0,\sigma^2_\mathrm{level}), &\text{ local level}\\
+  \alpha_{t} &=\alpha_{t-1} +\epsilon_\mathrm{trend},
+ &\epsilon_\mathrm{trend}\sim N(0,\sigma^2_\mathrm{trend}),
+ &\text{ local trend},
+\end{align*}
+<p>
+which in state space representation transfers into
+</p>
+\begin{equation*}
+G=\begin{bmatrix}
+1 & 1 \\
+0 & 1 \\
+\end{bmatrix},\quad
+F= \begin{bmatrix}1 & 0 \\\end{bmatrix},
+\quad x_t = \begin{bmatrix} \mu_{t}&\alpha_{t}\end{bmatrix}^T,
+\end{equation*}
+<p>
+with three parameters for the error variances
+</p>
+\begin{equation*}
+\theta =
+  \begin{bmatrix}
+     \sigma^2_\mathrm{obs}&\sigma^2_\mathrm{level} &\sigma^2_\mathrm{trend}
+  \end{bmatrix}^T.
+\end{equation*}
+
+<p>
+It is interesting to note, that  the local level and trend model with \(\sigma^2_\mathrm{level} = 0\) and \(\lambda = \sigma^2_\mathrm{trend}/\sigma^2_\mathrm{obs} > 0\) is equivalent to cubic spline smoothing (<a href="#org415d25a">Durbin &amp; Koopman, 2012</a>) with smoothing parameter \(\lambda\).
+</p>
+
+<p>
+Below, we apply this to classical Nile flow data set used in numerous time series text books. We use Matlab with <a href="index.html">DLM toolbox</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-matlab"><span style="color: #b22222;">% Nile flow data</span>
+y = [1120 1160  963 1210 1160 1160  813 1230 1370 1140  995  935 <span style="text-decoration: underline;">...</span>
+     1110  994 1020  960 1180  799  958 1140 1100 1210 1150 1250 <span style="text-decoration: underline;">...</span>
+     1260 1220 1030 1100  774  840  874  694  940  833  701  916 <span style="text-decoration: underline;">...</span>
+     692 1020 1050  969  831 726  456  824  702 1120 1100  832  764 <span style="text-decoration: underline;">...</span>
+     821  768  845 864  862 698  845  744  796 1040  759  781  865 <span style="text-decoration: underline;">...</span>
+     845  944  984  897  822 1010  771  676  649  846  812  742  801 <span style="text-decoration: underline;">...</span>
+     1040  860  874 848  890  744  749  838 1050  918  986  797  923 <span style="text-decoration: underline;">...</span>
+     975  815 1020  906  901 1170  912  746  919  718  714  740]';
+
+t = (1871<span style="color: #228b22;">:</span>1970)'; <span style="color: #b22222;">% time</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-matlab">options = struct(<span style="color: #8b2252;">'order'</span>,1);
+dlmplotfit(dlmfit(y,122,[0 1.65],[],[],[],options),t);
+</pre>
+</div>
+
+<p>
+Above we used known observation uncertainty standard deviation (\(\sigma_{\mathrm{obs}}=122\)) and known level and trend variability standard deviations ([0 1.65]). In later examples these values are estimated from the data. The Figure <a href="#orgf56c0ab">1</a> below shows the data together with estimated level component \(\mu_{1:n} = x_{\mathrm{level},1:n}\) and its 95% probability envelope, formed from individual probability limits.
+</p>
+
+
+<div id="orgf56c0ab" class="figure">
+<p><img src="img/splinedemofit.png" alt="splinedemofit.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>DLM smoother fitted on Nile flow time series</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc816eef" class="outline-4">
+<h4 id="orgc816eef"><span class="section-number-4">1.8.2</span> Classical linear regression</h4>
+<div class="outline-text-4" id="text-1-8-2">
+<p>
+Linear regression without dynamical evolution of the regression components is a special case of DLM model, although using  DLM code to fit linear regression model is not the most efficient way to achieve this.
+A non dynamic model is obtained by setting all model error variances to zero. Below, this is done for the Nile example, The 95% probability limits for the level coincides with classical confidence limits of the linear regression.
+</p>
+
+<pre class="example">
+dlmplotfit(dlmfit(y,122,[0 0],[],[],[],options),t);
+
+</pre>
+
+
+
+<div id="orgecc7018" class="figure">
+<p><img src="img/splinedemofit2.png" alt="splinedemofit2.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Linear trend with DLM</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org54bb7de" class="outline-4">
+<h4 id="org54bb7de"><span class="section-number-4">1.8.3</span> Seasonal component</h4>
+<div class="outline-text-4" id="text-1-8-3">
+<p>
+For DLM time series models, we have two main ways to model seasonality. If ns is the number of seasons, then the <i>full seasonal model</i> has ns-1 components. The number is one smaller than the number of seasons, as the model typically has already a component for the mean level.
+Model for 4 seasons would be obtained as
+</p>
+<pre class="example">
+[G,F] = dlmgensys(struct('fullseas',1,'ns',4,'order',-1))
+
+G =
+
+    -1    -1    -1
+     1     0     0
+     0     1     0
+
+
+F =
+
+     1     0     0
+</pre>
+
+
+<p>
+Above <code>order=-1</code> suppresses the default mean level component, so the function returns only the seasonal parts.
+</p>
+
+<p>
+An alternative description of seasonality uses trigonometric functions and is achieved by using two model states for each harmonic component. Monthly data with annual and semiannual cycles would be defined by
+</p>
+<pre class="example">
+[G,F] = dlmgensys(struct('trig',2,'ns',12,'order',-1))
+
+G =
+
+      0.86603          0.5            0            0
+         -0.5      0.86603            0            0
+            0            0          0.5      0.86603
+            0            0     -0.86603          0.5
+
+
+F =
+
+     1     0     1     0
+</pre>
+
+<p>
+For illustration we use monthly temperatures at Kaisaniemi, Helsinki. Fit seasonal component with one harmonic function, but allow some variability in the amplitude, with \(\sigma_\mathrm{trend} = 0.005\), \(\sigma_\mathrm{seas} = 0.4\).
+</p>
+
+<pre class="example">
+load kaisaniemi.mat; % time and temp
+options = struct('order',1,'trig',1);
+w0 = [0, 0.005, 0.4, 0.4];  % mode error stds
+s = 2; % error in the observation operator
+dlm = dlmfit(temp,s,w0,[],[],[],options);
+dlmplotfit(dlm,time);
+grid; datetick;
+xlabel('time'); ylabel('temperature [C]')
+title('Monthly temperatures at Kaisaniemi, Helsinki')
+
+</pre>
+
+
+<div id="org45e2c8b" class="figure">
+<p><img src="img/seasonaldemo.png" alt="seasonaldemo.png" />
+</p>
+<p><span class="figure-number">Figure 3: </span>Seasonal model on Kaisaniemi temperatures 2004-2013</p>
+</div>
+
+
+<p>
+See also the ozone time series example.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org09b122d" class="outline-4">
+<h4 id="org09b122d"><span class="section-number-4">1.8.4</span> Autoregressive process</h4>
+<div class="outline-text-4" id="text-1-8-4">
+<p>
+Autoregressive processes have serial dependence between the observations. For example, AR(3) process is defined by three coefficients \([\rho_{1},\rho_{2},\rho_{3}]\) and an independent innovation term \(\epsilon\) as
+</p>
+\begin{equation*}
+y_{t} = \rho_{1}y_{t-1} + \rho_{2}y_{t-2} + \rho_{3}y_{t-3} + \epsilon, \qquad
+\epsilon \sim N(0,\sigma^{2}_\mathrm{eps})
+\end{equation*}
+
+<p>
+For including autoregressive component in state space formulation we need to include state variables that "remember" the previous values. This can be achieved by suitable evolution operator \(G\). For example, AR(3) process with coefficients \([\rho_{1},\rho_{2},\rho_{3}]\), has three extra states with
+</p>
+\begin{equation*}
+G =
+  \begin{bmatrix}
+     \rho_1 & 1  & 0 \\
+     \rho_2 & 0  & 1 \\
+     \rho_3 & 0  & 0 \\
+  \end{bmatrix},\quad
+F =
+  \begin{bmatrix}
+     1 & 0 & 0 \\
+  \end{bmatrix}.
+\end{equation*}
+
+<p>
+A pure AR(3) process would then be obtained by setting the "observation error" \(\sigma_\mathrm{obs}\) to zero and the first model error component equal to the innovation variance \(\sigma^{2}_\mathrm{eps}\).
+</p>
+
+<p>
+In the Matlab toolbox, you can set autoregressive coefficients by using option <code>arphi</code>.
+</p>
+
+<pre class="example">
+options = struct('arphi',[0.1 0.2 0.3],'order',-1);
+[G,F] = dlmgensys(options)
+
+G =
+
+          0.1            1            0
+          0.2            0            1
+          0.3            0            0
+
+
+F =
+
+     1     0     0
+</pre>
+
+<p>
+This representation allows the use of DLM code to to fit AR process and estimate its parameters, see below for an example. Note also that the basic AR formulation assumes that the observations are obtained without error. In DLM formulation it is easy to have a model that has both observation error and an AR component.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7717c7a" class="outline-3">
+<h3 id="org7717c7a"><span class="section-number-3">1.9</span> Estimating the parameters</h3>
+<div class="outline-text-3" id="text-1-9">
+<p>
+In examples above, the variance parameters defining the model error covariance matrix \(W_t\) were assumed to be known. In practice we need some estimation methodology. Basically there are three alternatives. One. Use subject level knowledge with trial and error to fix the parameters without any algorithmic tuning. Two. Use the likelihood function with a numerical optimization routine to find maximum likelihood estimates of the parameters and plug the estimates back to the equations and re-fit the DLM model. Three. Use MCMC to sample from the posterior distribution of the parameters to estimate the parameters or to integrate out their uncertainty.
+</p>
+
+<p>
+To estimate the free parameters \(\theta\) in the model formulation  we need the marginal likelihood function \(p(y_{1:n}|\theta)\). By the assumed Markov properties of the system, this is obtained sequentially as a by product of the Kalman filter recursion,
+</p>
+\begin{equation*}
+  -2\log(p(y_{1:n}|\theta)) = \mathrm{constant}+
+ \sum_{t=1}^n\left[(y_t-F_t\hat{x}_{t})^TC_{t}^{y-1}(y_t-F_t\hat{x}_{t})
+        + \log(|C_{t}^y|)\right].
+\end{equation*}
+<p>
+On the right hand side, the parameter \(\theta\) will appear in the model predictions \(\hat{x}_{t}\) as they depend on the model formulation, on the matrix \(G_t\), as well as on the model error \(W_t\). For the same reason we need the determinant of the model prediction covariance matrix \(C_{t}^y\). A good thing is that the above likelihood can be calculated along the DLM filter and smoother recursions without much extra effort.
+</p>
+
+<p>
+The <code>dlmfit</code> Matlab function has code for both maximum likelihood and MCMC calculations of parameters in the diagonal of the model error matrix \(W\), autoregressive coefficients in \(G\), as well as for estimating one extra multiplicative factor for the observation error matrix \(V\). Other parameter estimation tasks can be programmed, with the help of the likelihood returned by the <code>dlmsmo</code> function, also. See the AR example below.
+</p>
+</div>
+
+<div id="outline-container-org6b37f57" class="outline-4">
+<h4 id="org6b37f57"><span class="section-number-4">1.9.1</span> Nile data again.</h4>
+<div class="outline-text-4" id="text-1-9-1">
+<p>
+Next, we use the Nile data and estimate the smoothness parameter \(\sigma_\mathrm{trend}\). By default the code displays the optimization iterations performed by <code>fminsearch</code>. The option <code>winds</code> contains the indexes of the diagonal of \(W\) that are to be optimized. For example, you can set <code>winds = [0 1 2 2 2 2]</code> to have one parameter for the second element and one common parameter for the elements 3 to 6. The input and output for the optimizer will be in square root scale, i.e.  as standard deviations, but the optimization is performed over logarithms of those to ensure positivity of the results.
+</p>
+
+<pre class="example">
+options = struct('order',1,'opt',1,'winds',[0 1]);
+dlm = dlmfit(y,122,[0 1.65],[],[],[],options);
+
+ Iteration   Func-count     min f(x)         Procedure
+     0            1           1102.4
+     1            2           1102.4         initial simplex
+     2            4          1102.39         expand
+     3            6          1102.39         contract inside
+     4            8          1102.39         contract inside
+     5           10          1102.39         contract inside
+     6           12          1102.39         contract inside
+     7           14          1102.39         contract inside
+     8           16          1102.39         contract inside
+     9           18          1102.39         contract inside
+    10           20          1102.39         contract inside
+    11           22          1102.39         contract inside
+
+Optimization terminated:
+ the current x satisfies the termination criteria using OPTIONS.TolX of 1.000000e-04
+ and F(X) satisfies the convergence criteria using OPTIONS.TolFun of 1.000000e-04
+
+
+wopt =
+
+        1.579
+sqrt(diag(dlm.W))'
+
+ans =
+
+            0        1.579
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org6f6ef8a" class="outline-4">
+<h4 id="org6f6ef8a"><span class="section-number-4">1.9.2</span> AR parameters</h4>
+<div class="outline-text-4" id="text-1-9-2">
+<p>
+In this example we use Kalman filter likelihood to fit parameters in the process evolution matrix \(G\). Take the residuals from the last DLM run and fit AR(1) model. For numerical stability you have to set some small non zero observation variance (this might change in the next version). This functionality in now build into <code>dlmfit</code>, also. The same idea can be used to estimate any parameter in model definition using the Kalman filter likelihood.
+</p>
+
+<p>
+Below, the messy looking cost function <code>ofun</code> takes all the elements of previous DLM fit stored in variable <code>dlm</code> except matrix <code>G</code> for which the first column is replaced with given <code>phi</code>. Then it runs <code>dlmsmo</code> for DLM calculations and returns the -2log(likelihood), which is minimized with respect to <code>phi</code> using <code>fminsearch</code>.
+</p>
+
+<pre class="example">
+y = dlm.resid2; % data are residual from the previous fit
+phi = 0.3; % initial guess for AR parameter
+opts = struct('order',-1,'seas',0,'arphi',phi);
+dlm = dlmfit(y,0.00001,[1],[],[],[],opts); % initial DLM fit
+% define object function for minimizing the -2*log(likelihood)
+ofun = @(phi)getfield(dlmsmo(dlm.y,dlm.F,dlm.V,dlm.x0,assifun(dlm.G,phi,1:size(dlm.G,1),1),dlm.W,dlm.C0,dlm.XX,0),'lik');
+phiopt = fminsearch(ofun,phi)
+
+phiopt =
+
+      0.62045
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org789e392" class="outline-2">
+<h2 id="org789e392"><span class="section-number-2">2</span> Toolbox functions</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org1a4b857" class="outline-3">
+<h3 id="org1a4b857"><span class="section-number-3">2.1</span> Function <code>dlmsmo</code></h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<pre class="src src-matlab">out = dlmsmo(y,F,V,x0,G,W,C0,X, sample);
+</pre>
+</div>
+
+<p>
+The main workhorse for the DLM calculations. Given the definition of DLM model as input, return Kalman filter and Kalman smoother estimates of the states, an optional sample from the state and observations, and statistics related to the fit.
+</p>
+
+<p>
+Input:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><code>y</code></td>
+<td class="org-left">Observations, \(n\times p\) matrix</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>F</code></td>
+<td class="org-left">Observation operator, \(p\times m-q\) matrix</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>V</code></td>
+<td class="org-left">Observation error, \(n\times p\) matrix of standard deviations</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>x0</code></td>
+<td class="org-left">initial value for the state, vector of length \(m\)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>G</code></td>
+<td class="org-left">Model operator, \(m-q \times m-q\)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>W</code></td>
+<td class="org-left">Model error covariance, \(m \times m\)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C0</code></td>
+<td class="org-left">Uncertainty of <code>x0</code>, \(m \times m\)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>X</code></td>
+<td class="org-left">Optional matrix of regression covariates, \(n\times q\)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>sample</code></td>
+<td class="org-left">1 if also a sample from the state is needed</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
+Above \(m\) is the dimension of the state vector, \(n\) is the number of observation times, \(p\) is the dimension of the observation at each time and \(q\) is the number of regression covariates in the model.
+If covariates are given in matrix <code>X</code>, the observation operator and the model operator are appended with suitable entries for <code>X</code>, hence their input dimensions are of size \(m-q\). However, the initial values <code>x0</code> and <code>C0</code> and model error covariance matrix <code>W</code> should already contain the elements corresponding to columns of <code>X</code>. An empty <code>X</code> as input means no covariates.
+</p>
+
+<p>
+Output is a structure that contains the element below, and many more (to be added).
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><code>x</code></td>
+<td class="org-left">smoothed state, \(m\times n\)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>xstd</code></td>
+<td class="org-left">std of <code>x</code>, \(n\times m\)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>xf</code></td>
+<td class="org-left">predicted states</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>lik</code></td>
+<td class="org-left">-2log(likelihood)</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+The function <code>dlmsmo</code> is called by <code>dlmfit</code> that contains code for constructing the system matrices and estimating for some of the model parameters. The ploting functions described below can be used to plot the model output.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org28d2122" class="outline-3">
+<h3 id="org28d2122"><span class="section-number-3">2.2</span> Function <code>dlmfit</code></h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-matlab">out = dlmfit(y,s,w,x0,C0,X,options);
+</pre>
+</div>
+
+<p>
+The function <code>dlmfit</code> uses <code>dlmsmo</code> to fit univariate DLM time series model to observations. It generated the suitable model structure according to options given. Optionally it performs optimization or MCMC sampling analysis for parameters in the diagonal of model error matrix  \(W\).
+</p>
+
+<p>
+The inputs are as the following.
+</p>
+
+<dl class="org-dl">
+<dt><code>y</code></dt><dd>The observations to be fitted.</dd>
+<dt><code>s</code></dt><dd>The observation uncertainties as standard deviations, scalar or matrix of same size as <code>y</code>.</dd>
+<dt><code>w</code></dt><dd>Square roots in the diagonal of the model error matrix \(W\), up to the last non zero element.</dd>
+<dt><code>x0</code></dt><dd>The initial values for the model states, if not given, the code tries to use some reasonable first guess (typically 0).</dd>
+<dt><code>C0</code></dt><dd>Covariance matrix for the initial model state uncertainty. Defaults to some large values in the diagonal.</dd>
+<dt><code>X</code></dt><dd>Covariate proxy time series. Defaults to empty matrix <code>[]</code>.</dd>
+<dt><code>options</code></dt><dd>System matrix generation and optimization options as a structure.</dd>
+</dl>
+
+<p>
+This function uses <code>dlmgensys</code> to generate the system matrices. So, all the options defined for it can be used. In addition, the <code>options</code> structure can have the following options related to the estimation of variance parameters
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><code>opt</code></td>
+<td class="org-left">if 1, perform optimization</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>mcmc</code></td>
+<td class="org-left">if 1, do mcmc sampling in the parameters</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>nsimu</code></td>
+<td class="org-left">number of mcmc simulations</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>winds</code></td>
+<td class="org-left">indexes in diag(W) to be estimated</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>fitv</code></td>
+<td class="org-left">if 1, estimate observation error, also</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+As an output the function returns the result of <code>dlmsmo</code> after optional estimation of model parameters. Even if no iterative optimization is performed, the function <code>dlmsmo</code> is run at least twice to iterate the initial values <code>x0</code> and <code>C0</code>. Also, some additional elements are added to the output structure. (These are to be documented later, see the example and source.)
+</p>
+
+<p>
+Currently, the optimization and MCMC simulation can both have target from the diagonal of the model error matrix \(W\) and one scale parameter for the observation error \(V\). For some models, there are predefined optimization targets. In general you should use <code>winds</code> to define which indexes in diag(\(W\)) are to be estimated by maximum likelihood or sampled by MCMC.
+</p>
+
+<p>
+To use <code>winds</code>, you need to know the order of the model components in \(W\): trend, seasonal, AR parameters, covariates. For example if the model has trend of order 1, and two harmonic seasonal components (<code>trig=2</code>) then having one parameter for the local trend variability and one common parameter for the seasonal variability would be achieved by setting  <code>options.winds = [0 1 2 2 2 2]</code>.
+</p>
+
+<p>
+If you need to estimate something else than the diagonal of \(W\), then you can build the target function by using the <code>lik</code> output from <code>dlmsmo</code>. See the AR example.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7af7701" class="outline-3">
+<h3 id="org7af7701"><span class="section-number-3">2.3</span> Function <code>dlmgensys</code></h3>
+<div class="outline-text-3" id="text-2-3">
+<div class="org-src-container">
+<pre class="src src-matlab">[G,F] = dlmgensys(options);
+</pre>
+</div>
+
+<p>
+This function generates system evolution matrix and corresponding observation operator matrix for several common dynamic linear models used in time series analyses. The input variable <code>options</code> is a structure having elements that define the components. The following elements are possible at the moment:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><code>order</code></td>
+<td class="org-left">order of polynomial trend</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>ns</code></td>
+<td class="org-left">number of seasons</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>fullseas</code></td>
+<td class="org-left">if 1, use full seasonal model</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>trig</code></td>
+<td class="org-left">number of harmonic components</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>arphi</code></td>
+<td class="org-left">AR coefficients</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Example
+</p>
+<pre class="example">
+[G,F] = dlmgensys(struct('order',1,'fullseas',1,'ns',4))
+
+G =
+
+     1     1     0     0     0
+     0     1     0     0     0
+     0     0    -1    -1    -1
+     0     0     1     0     0
+     0     0     0     1     0
+
+
+F =
+
+     1     0     1     0     0
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org63902c7" class="outline-3">
+<h3 id="org63902c7"><span class="section-number-3">2.4</span> Function <code>dlmsmosam</code></h3>
+<div class="outline-text-3" id="text-2-4">
+<div class="org-src-container">
+<pre class="src src-matlab">sample = dlmsmosam(dlm,nsam);
+</pre>
+</div>
+
+<p>
+Sample of states from DLM fit. Input: <code>dlm</code> fit object, <code>nsam</code> number of samples to draw. Output: matrix of size nstate*ntime*nsam. Uses the simulation smoother, i.e.  samples from joint distribution of states at all times given the full set of observations.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7c45b96" class="outline-3">
+<h3 id="org7c45b96"><span class="section-number-3">2.5</span> Plotting functions</h3>
+<div class="outline-text-3" id="text-2-5">
+<div class="org-src-container">
+<pre class="src src-matlab">dlmplotfit(dlm, time, yscale, yind);
+</pre>
+</div>
+
+<p>
+Plots the observations with the estimated level component of the model.
+Input: <code>dlm</code> is output from <code>dlmfit</code>, <code>time</code> is optional x axis for the plots, <code>yscale</code> optional scaling factor for <code>y</code>, and <code>yind</code> the column of <code>y</code> to be plotted.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-matlab">dlmplotdiag(dlm);
+</pre>
+</div>
+
+<pre class="example">
+dlmplotdiag(dlm);
+
+</pre>
+
+<p>
+Plot residual diagnostics of DLM fit performed by <code>dlmsmo</code> or <code>dlmfit</code>.
+</p>
+
+
+<div id="org744a697" class="figure">
+<p><img src="img/splinedemo_diag.png" alt="splinedemo_diag.png" />
+</p>
+<p><span class="figure-number">Figure 4: </span>Nile flow time series residual diagnostics</p>
+</div>
+
+
+<div class="org-src-container">
+<pre class="src src-matlab">dlmplotmcmc(dlm);
+</pre>
+</div>
+
+<p>
+Plot the MCMC chain used in estimation of model parameter in function <code>dlmfit</code>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org39d3f07" class="outline-2">
+<h2 id="org39d3f07"><span class="section-number-2">3</span> Ozone trend analysis</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+To illustrate the DLM toolbox, we analyse univariate time series with local level and trend, seasonality and some proxy time series as regressors. The observations are remote sensing satellite data for stratospheric ozone. This example reproduces some of the calculations for article: M. Laine, N. Latva-Pukkila and E. Kyrölä: Analyzing time-varying trends in stratospheric ozone time series using state the space approach, <i>Atmospheric Chemistry and Physics</i> 14(18), 2014, <a href="http://dx.doi.org/10.5194/acp-14-9707-2014">doi: 10.5194/acp-14-9707-2014</a>.
+</p>
+
+
+<p>
+The model can be written as
+</p>
+
+\begin{equation}
+ y_t = \mu_t + \gamma_t + \beta_{1,t} X_{1,t} + \beta_{2,t} X_{2,t} +
+\beta_{3,t} X_{3,t} + \epsilon_t
+\end{equation}
+
+<p>
+Where \(\mu_{t}\) is the signal level, \(\gamma_{t}\) is the seasonal component, and \(\beta_{i,t}\) and \(X_{i,t}\) are regression coefficients and values of the proxy time series.
+</p>
+
+<p>
+The DLM matrices involved here are
+</p>
+\begin{equation*}
+x_t =
+  \begin{bmatrix}
+    \mu_t & \alpha_t & \psi_{t,1} & \psi^*_{t,1} & \psi_{t,2} & \psi^*_{t,2} &\beta_1& \beta_2 &\beta_3
+  \end{bmatrix}^T,
+\end{equation*}
+\begin{equation*}
+G = \begin{bmatrix}
+      1 & 1 & 0 & 0 & 0 & 0& 0 & 0& 0 \\
+      0 & 1 & 0 & 0 & 0 & 0& 0 & 0& 0 \\
+      0 & 0 &\cos\left(\frac\pi6\right)&\sin\left(\frac\pi6\right)&0&0&0&0&0\\
+      0 & 0 &-\sin\left(\frac\pi6\right)&\cos\left(\frac\pi6\right)&0&0&0&0&0\\
+      0 & 0 &0&0&\cos\left(\frac\pi3\right)&\sin\left(\frac\pi3\right)&0&0&0\\
+      0 & 0 &0&0&-\sin\left(\frac\pi3\right)&\cos\left(\frac\pi3\right)&0&0&0\\
+      0 & 0 & 0 & 0 &0 & 0 & 1 & 0 & 0\\
+      0 & 0 & 0 & 0 &0 & 0 & 0 & 1 & 0\\
+      0 & 0 & 0 & 0 &0 & 0 & 0 & 0 & 1\\
+    \end{bmatrix},
+\end{equation*}
+\begin{equation*}
+F_t = \begin{bmatrix}
+    1 & 0 & 1 & 0 & 1 & 0& \mathrm{solar}(t) &\mathrm{qbo1}(t)&\mathrm{qbo2}(t) \\
+  \end{bmatrix},
+\end{equation*}
+\begin{equation*}
+\theta = \begin{bmatrix}
+     \sigma^2_\mathrm{level} &\sigma^2_\mathrm{trend}&\sigma^2_\mathrm{seas}
+  \end{bmatrix}^T.
+\end{equation*}
+
+<p>
+In the toolbox you define the model as <code>options=struct('trig',2,'order',1);</code>. The elements defining the proxy variable are added by <code>dlmfit</code>.
+Function <code>dlmgensys</code> can be used to construct the matrices \(G\) and \(F\) if needed.
+</p>
+
+<pre class="example">
+options = struct('trig',2,'order',1);
+[G, F] = dlmgensys(options)
+
+G =
+
+            1            1            0            0            0            0
+            0            1            0            0            0            0
+            0            0      0.86603          0.5            0            0
+            0            0         -0.5      0.86603            0            0
+            0            0            0            0          0.5      0.86603
+            0            0            0            0     -0.86603          0.5
+
+
+F =
+
+     1     0     1     0     1     0
+</pre>
+
+
+<p>
+First load the example data set. It consists of stratospheric ozone observations from two satellite instruments SAGE II and GOMOS. The original satellite observations has been combined and processed to produce averaged zonal data for different altitudes. Here we use monthly averages between 45 km to 55 km and 40°N to 50°N for years 1984 to 2012. The data set given here is for demonstration purposes only.
+</p>
+
+<pre class="example">
+load ozonedata.mat
+
+time = data(:,1); % time in years from 1984 to 2012
+y = data(:,2); % ozone density [1/cm^3]
+s = data(:,3); % uncertainty standard deviation for y
+X = data(:,4:6); % proxies
+
+</pre>
+
+<p>
+We scale \(y\) for numerical stability.
+</p>
+<pre class="example">
+ys = stdnan(y);
+yy = y./ys;
+ss = s./ys;
+
+</pre>
+
+<p>
+Specify prior means for some components of \(W\), the model error matrix. The <code>w0</code> variable below has the square roots of the diagonal of \(W\) and it is given as an argument to <code>dlmfit</code>.
+</p>
+<pre class="example">
+ym = meannan(yy);  % mean observations
+wtrend = abs(ym)*0.005/12; % trend std
+wseas  = 0.01;   % seasonal component std
+w0 = [0 wtrend wseas wseas wseas wseas];
+
+</pre>
+
+<p>
+Calculate the DLM smoother solution and do MCMC simulation over some components in the matrix \(W\). As we are doing MCMC analysis we need to specify Bayesian prior distributions for the unknown parameters. Now we have two of them, the trend standard deviation \(\sigma_\mathrm{trend}\) and the seasonal standard deviation \(\sigma_\mathrm{seas}\). By default, the estimation is done in logarithmic scale with Gaussian priors, i.e.  log-normal priors on the original scale. The prior means were already given above. Prior log-normal scale parameter is given with option <code>varcv</code> below. Value 1 means prior standard deviation that is approximately 100% on the original scale of the parameter.
+</p>
+<pre class="example">
+options = struct('trig',2,'mcmc',1,'nsimu',2000);
+options.winds = [0 1 2 2 2 2];
+options.varcv = [1 1];
+dlm = dlmfit(yy,ss,w0,[],[],X,options);
+Sampling these parameters:
+name   start [min,max] N(mu,s^2)
+w2: -5.36761 [-Inf,Inf] N(-5.36761,1^2)
+w3: -4.60517 [-Inf,Inf] N(-4.60517,1^2)
+
+woptv =
+
+  1x0 empty double row vector
+
+
+woptw =
+
+    0.0011264      0.22004
+
+
+woptg =
+
+  1x0 empty double row vector
+</pre>
+
+
+<p>
+Next, plot the fitted observations and the level component.
+</p>
+<pre class="example">
+dlmplotfit(dlm, time, ys)
+title(label);xlabel('time');ylabel('average O3 density [cm^{-3}]')
+
+</pre>
+
+
+<div id="org0af87d7" class="figure">
+<p><img src="img/ozonedemo1.png" alt="ozonedemo1.png" />
+</p>
+<p><span class="figure-number">Figure 5: </span>Stratospheric ozone trends</p>
+</div>
+
+<p>
+Some model diagnostic from the prediction residuals are plotted by <code>dlmplotdiag</code>.
+</p>
+<pre class="example">
+dlmplotdiag(dlm, time, ys)
+
+</pre>
+
+
+<div id="org9917911" class="figure">
+<p><img src="img/ozonedemo2.png" alt="ozonedemo2.png" />
+</p>
+<p><span class="figure-number">Figure 6: </span>Stratospheric ozone trends diagnostics</p>
+</div>
+
+<p>
+The residuals do not look optimal, there is some cyclic behaviour that might be caused by non-modelled seasonal term. We try again with 3 harmonics instead of two.
+</p>
+<pre class="example">
+options = struct('trig',3,'mcmc',1,'nsimu',2000);
+options.winds = [0 1 2 2 2 2 2 2];
+options.varcv = [1 1];
+w0 = [0 wtrend wseas wseas wseas wseas wseas wseas];
+dlm = dlmfit(yy,ss,w0,[],[],X,options);
+Sampling these parameters:
+name   start [min,max] N(mu,s^2)
+w2: -5.36761 [-Inf,Inf] N(-5.36761,1^2)
+w3: -4.60517 [-Inf,Inf] N(-4.60517,1^2)
+
+woptv =
+
+  1x0 empty double row vector
+
+
+woptw =
+
+    0.0042701     0.096897
+
+
+woptg =
+
+  1x0 empty double row vector
+</pre>
+
+<p>
+Still not happy with the result. Next thing to try is to use an autoregressive component. This usually can explain some non-modelled feature, on the cost of possibly explaining some unknown systematic effects with correlated noise.
+The next version has 3 harmonics and an AR(1) component. We need some extra options for this, <code>arphi</code> has the initial value for autoregressive coefficient, <code>fitar</code> tells to try to estimate this value, also, and <code>gcv</code> has the relative prior standard deviation (the log-normal scale parameter).
+</p>
+<pre class="example">
+options = struct('trig',3,'mcmc',1,'nsimu',2000);
+options.arphi = 0.4;
+options.winds = [0 1 2 2 2 2 2 2 3];
+options.varcv = [1 1 1];
+options.fitar = 1;
+options.gcv = [1];
+war = 0.4;
+w0 = [0 wtrend wseas wseas wseas wseas wseas wseas war];
+dlm = dlmfit(yy,ss,w0,[],[],X,options);
+Sampling these parameters:
+name   start [min,max] N(mu,s^2)
+w2: -5.36761 [-Inf,Inf] N(-5.36761,1^2)
+w3: -4.60517 [-Inf,Inf] N(-4.60517,1^2)
+w9: -0.916291 [-Inf,Inf] N(-0.916291,1^2)
+g1: 0.4 [0,1] N(0.4,1^2)
+
+woptv =
+
+  1x0 empty double row vector
+
+
+woptw =
+
+   0.00099304     0.013988      0.37175
+
+
+woptg =
+
+      0.34958
+</pre>
+
+<p>
+Plot the fit and the residual diagnostics.
+</p>
+
+<pre class="example">
+figure(1); clf
+dlmplotfit(dlm, time, ys)
+title(label);xlabel('time');ylabel('average O3 density [cm^{-3}]')
+figure(2); clf
+dlmplotdiag(dlm, time, ys)
+
+</pre>
+
+
+
+<div id="org4db3d91" class="figure">
+<p><img src="img/ozonedemo1c.png" alt="ozonedemo1c.png" />
+</p>
+<p><span class="figure-number">Figure 7: </span>Stratospheric ozone trends</p>
+</div>
+
+
+<div id="org39c19cf" class="figure">
+<p><img src="img/ozonedemo2c.png" alt="ozonedemo2c.png" />
+</p>
+<p><span class="figure-number">Figure 8: </span>Stratospheric ozone trends diagnostics</p>
+</div>
+
+<p>
+Expect for one relatively negative autocorrelation at lag 13, the results look satisfactory. Next, for trend analysis, we produce sample from the model states using <code>dlmsmosam</code>. It accounts the posterior uncertainty in \(W\) and in \(G\) using the MCMC chain in <code>dlm.chain</code>.
+Also, to illustrate, we draw dome sample realizations of the level component over the fit plot.
+</p>
+<pre class="example">
+nsam = 200; % number of sampled to draw from the posterior
+dlm_sample = dlmsmosam(dlm,nsam);
+figure(1)
+hold on
+for i=1:5:nsam
+  plot(time,ys*squeeze(dlm_sample(1,:,i)),'-')
+end
+hold off
+
+</pre>
+
+
+<div id="org6762991" class="figure">
+<p><img src="img/ozonedemo3.png" alt="ozonedemo3.png" />
+</p>
+<p><span class="figure-number">Figure 9: </span>Simulated samples of the level component</p>
+</div>
+
+
+<p>
+Next, Figure <a href="#org5be8431">10</a> shows prior and posterior probability distributions for
+the unknown parameters, three from the diagonal of model error matrix \(W\) and one on \(G\) for autoregressive coefficient. The estimated posterior distributions look relatively well identified with respect to the priors, which mean that there is some information about the values of the parameters in the observations.
+</p>
+
+<pre class="example">
+mcmcplot(dlm.chain,[],dlm.res,'denspanel',2);
+
+</pre>
+
+
+
+<div id="org5be8431" class="figure">
+<p><img src="img/ozonedemo4.png" alt="ozonedemo4.png" />
+</p>
+<p><span class="figure-number">Figure 10: </span>Parameter prior and posterior from MCMC chain</p>
+</div>
+
+
+<p>
+Next, we sample trend statistics form the  DLM sample. Calculate 10 year (+-5) running trend for each model state sample in <code>dlm_sample</code>, collect the results and plot 95% probability region of our uncertainty about the decadal trend.
+</p>
+<pre class="example">
+nyear = 10;
+tsamp = ys*squeeze(dlm_sample(1,:,:)); % sample of levels
+ysm = mean(tsamp(:));                   % their mean
+ysf = 1/(ysm*nyear)*100;      % scale factor to get % change / 10 year
+t10 = mean((tsamp(nyear*12+1:end,:)-tsamp(1:end-nyear*12,:))')*ysf; % mean trend
+s10 = std((tsamp(nyear*12+1:end,:)-tsamp(1:end-nyear*12,:))')*ysf;  % std in the sample
+time10 = time(fix(nyear/2)*12+1:end); time10 = time10(1:length(t10)); % time axis for plot
+
+</pre>
+
+<pre class="example">
+confband(time10,t10,s10);grid;
+xlim([time(1),time(end)]); % match axis to other plots
+title('10 year trend');
+ylabel('% change / year')
+
+</pre>
+
+
+
+<div id="org630217a" class="figure">
+<p><img src="img/ozonedemo5.png" alt="ozonedemo5.png" />
+</p>
+<p><span class="figure-number">Figure 11: </span>Ten year trend in ozone</p>
+</div>
+
+<p>
+As also seen from the fit plot with the observations and the estimated level, the negative trend has started to increase toward positive somewhere after the year 1995, this increase has leveled out around 2000 and the current trend is slightly positive, but not necessarily in statistical significant way, i.e. zero or negative slope (although larger than in the beginning of the period) would also be consistent with the observations and with our model.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8f91284" class="outline-2">
+<h2 id="org8f91284"><span class="section-number-2">4</span> References</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+
+
+<ol class="org-ol">
+<li><a id="org6e0debb"></a>A.C. Harvey. <a id="org428196c"></a><br />
+<div class="outline-text-5" id="text-4-0-0-1">
+<p>
+<i>Forecasting, structural time series and the Kalman filter</i>.
+Cambridge University Press, 1990.
+</p>
+</div>
+</li>
+
+<li><a id="orgb2128eb"></a>T.J. Durbin and S.J. Koopman. <a id="org415d25a"></a><br />
+<div class="outline-text-5" id="text-4-0-0-2">
+<p>
+<i>Time Series Analysis by State Space Methods</i>.
+Oxford University  Press, second edition, 2012.
+</p>
+</div>
+</li>
+
+<li><a id="org4ce6bc4"></a>G. Petris, S. Petrone, and P. Campagnoli. <a id="orgc842ea2"></a><br />
+<div class="outline-text-5" id="text-4-0-0-3">
+<p>
+<i>Dynamic Linear Models with R</i>. Springer, 2009.
+</p>
+</div>
+</li>
+
+<li><a id="org5414ee4"></a>S. Särkkä. <a id="org9d952fc"></a><br />
+<div class="outline-text-5" id="text-4-0-0-4">
+<p>
+<i>Bayesian Filtering and Smoothing</i>.
+Cambridge University Press, 2013.
+</p>
+</div>
+</li>
+
+<li><a id="org00cb559"></a>D. Gamerman. <a id="org54db21c"></a><br />
+<div class="outline-text-5" id="text-4-0-0-5">
+<p>
+<i>Markov chain Monte Carlo &#x2013; Stochastic simulation for Bayesian inference</i>.
+Chapman &amp; Hall, second edition, 2006.
+</p>
+</div>
+</li>
+
+<li><a id="orgf6f9207"></a>N. Cressie and C.K. Wikle. <a id="org67338cc"></a><br />
+<div class="outline-text-5" id="text-4-0-0-6">
+<p>
+<i>Statistics for Spatio-Temporal Data</i>.
+Wiley, 2011.
+</p>
+
+
+<hr>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Marko Laine</p>
+<p class="date">Created: 2018-11-21 Ke 09:41</p>
+<p class="validation"></p>
+</div>
+</body>
+</html>
