@@ -5,15 +5,18 @@
 #+AUTHOR:    Marko Laine
 #+EMAIL:     marko.laine@fmi.fi
 
-#+PROPERTY: session *MATLAB*
-#+PROPERTY: exports results
-#+PROPERTY: results output
-#+PROPERTY: eval no-export
+# only output is exported, evaluation only manually c-c,c-c
+#+PROPERTY: header-args:matlab :session *MATLAB*
+#+PROPERTY: header-args:matlab :exports results
+#+PROPERTY: header-args:matlab :results output
+#+PROPERTY: header-args:matlab :eval no-export
+#+PROPERTY: header-args :exports results
 
 # matlab initialization
 #+BEGIN_SRC matlab :exports none :results none
   format short g
   cd ~/matlab/dlm/docs/
+  addpath ../examples/ % for the example datasets
 #+END_SRC
 
 * Dynamic linear models
@@ -21,8 +24,6 @@
 This text gives an introduction to using state space based dynamic regression analysis of time series. We are especially interested in extracting trends in climatic observations. The computer examples are given using my [[file:index.html][DLM toolbox]] for Matlab.
 
 ** Introduction
-
-# fix this, distributional properties change???
 
 Statistical analysis of time series data is usually faced with the fact that we have only one realization of a process whose properties we might not fully understand. In analysis of correlation structures, for example, we need to assume that some distributional properties of the process generating the variability stay unchanged in time. In linear trend analysis, we assume that there is an underlying change in the background that stays approximately constant over time. Dynamic regression with state space approach tries to avoid some of the problems. By explicitly allowing for variability in the regression coefficients we let the system properties change in time. Furthermore, the use of unobservable state variables allows direct modelling of the processes that are driving the observed variability, such as seasonality or external forcing, and we can explicitly allow for some modelling error.
 
@@ -38,7 +39,7 @@ The use of DLMs in time series analysis is well documented in statistical litera
 
 # for example Petris, Durbin.
 
-# For example, change of observing satellite might change the variability of the values.
+# For example, a change in the  observing satellite might change the variability of the values.
 
 ** State space description
 
@@ -211,6 +212,7 @@ y = [1120 1160  963 1210 1160 1160  813 1230 1370 1140  995  935 ...
      845  944  984  897  822 1010  771  676  649  846  812  742  801 ...
      1040  860  874 848  890  744  749  838 1050  918  986  797  923 ...
      975  815 1020  906  901 1170  912  746  919  718  714  740]';
+
 t = (1871:1970)'; % time
 #+end_example
 
@@ -235,7 +237,7 @@ Above we used known observation uncertainty standard deviation ($\sigma_{\mathrm
 #+BEGIN_SRC matlab :exports none :results none
 figresize(gcf,[650 320]);
 setfonts
-pngfile('img/splinedemofit.png',1); % goes to home directory?
+pngfile('img/splinedemofit.png',1,1);
 #+END_SRC
 #+CAPTION: DLM smoother fitted on Nile flow time series
 #+NAME: fig:spline
@@ -257,7 +259,7 @@ A non dynamic model is obtained by setting all model error variances to zero. Be
 #+BEGIN_SRC matlab :exports none :results none
 figresize(gcf,[650 320]);
 setfonts
-pngfile('img/splinedemofit2.png',1); % goes to home directory?
+pngfile('img/splinedemofit2.png',1,1);
 #+END_SRC
 #+CAPTION: Linear trend with DLM
 #+NAME: fig:spline2
@@ -286,6 +288,7 @@ F =
 
      1     0     0
 #+end_example
+
 
 Above ~order=-1~ suppresses the default mean level component, so the function returns only the seasonal parts.
 
@@ -339,7 +342,7 @@ For illustration we use monthly temperatures at Kaisaniemi, Helsinki. Fit season
 # Generate picture
 #+BEGIN_SRC matlab :exports none :results none
   setfonts
-  pngfile('img/seasonaldemo.png',1); % goes to home directory?
+  pngfile('img/seasonaldemo.png',1,1); % goes to home directory?
 #+END_SRC
 #+CAPTION: Seasonal model on Kaisaniemi temperatures 2004-2013
 #+NAME: fig:seas1
@@ -639,11 +642,26 @@ Sample of states from DLM fit. Input: =dlm= fit object, =nsam= number of samples
 Plots the observations with the estimated level component of the model.
 Input: =dlm= is output from =dlmfit=, =time= is optional x axis for the plots, =yscale= optional scaling factor for =y=, and =yind= the column of =y= to be plotted.
 
-#+BEGIN_SRC matlab :eval never :exports src
+
+#+BEGIN_SRC matlab :exports none :results none
+  dlm = dlmfit(y,122,[0 1.65],[],[],[],options);
+#+END_SRC
+
+
+#+BEGIN_SRC matlab :exports src
   dlmplotdiag(dlm);
 #+END_SRC
 
+#+RESULTS:
+: dlmplotdiag(dlm);
+
 Plot residual diagnostics of DLM fit performed by =dlmsmo= or =dlmfit=.
+
+#+BEGIN_SRC matlab :exports none :results none
+  setfonts
+  pngfile('img/splinedemo_diag.png',1,1);
+#+END_SRC
+
 
 #+CAPTION: Nile flow time series residual diagnostics
 #+NAME: fig:spline_diag
@@ -754,6 +772,7 @@ X = data(:,4:6); % proxies
 
 #+RESULTS:
 : load ozonedata.mat
+: 
 : time = data(:,1); % time in years from 1984 to 2012
 : y = data(:,2); % ozone density [1/cm^3]
 : s = data(:,3); % uncertainty standard deviation for y
@@ -806,17 +825,17 @@ w3: -4.60517 [-Inf,Inf] N(-4.60517,1^2)
 
 woptv =
 
-   Empty matrix: 1-by-0
+  1x0 empty double row vector
 
 
 woptw =
 
-    0.0010452      0.18119
+    0.0011264      0.22004
 
 
 woptg =
 
-   Empty matrix: 1-by-0
+  1x0 empty double row vector
 #+end_example
 
 
@@ -832,7 +851,7 @@ title(label);xlabel('time');ylabel('average O3 density [cm^{-3}]')
 
 #+BEGIN_SRC matlab :exports none :results none
 setfonts
-pngfile('img/ozonedemo1.png',1); % goes to home directory?
+pngfile('img/ozonedemo1.png',1,1); % goes to home directory?
 #+END_SRC
 #+CAPTION: Stratospheric ozone trends
 #+NAME: fig:ozonedemo1
@@ -848,7 +867,7 @@ Some model diagnostic from the prediction residuals are plotted by =dlmplotdiag=
 
 #+BEGIN_SRC matlab :exports none :results none
 setfonts
-pngfile('img/ozonedemo2.png',1); % goes to home directory?
+pngfile('img/ozonedemo2.png',1,1); 
 #+END_SRC
 #+CAPTION: Stratospheric ozone trends diagnostics
 #+NAME: fig:ozonedemo2
@@ -856,7 +875,7 @@ pngfile('img/ozonedemo2.png',1); % goes to home directory?
 
 The residuals do not look optimal, there is some cyclic behaviour that might be caused by non-modelled seasonal term. We try again with 3 harmonics instead of two.
 #+BEGIN_SRC matlab
-options = struct('trig',3,'winds','mcmc',1,'nsimu',2000);
+options = struct('trig',3,'mcmc',1,'nsimu',2000);
 options.winds = [0 1 2 2 2 2 2 2];
 options.varcv = [1 1];
 w0 = [0 wtrend wseas wseas wseas wseas wseas wseas];
@@ -865,9 +884,10 @@ dlm = dlmfit(yy,ss,w0,[],[],X,options);
 
 #+RESULTS:
 #+begin_example
-options = struct('trig',3,'winds','mcmc',1,'nsimu',2000);
+options = struct('trig',3,'mcmc',1,'nsimu',2000);
 options.winds = [0 1 2 2 2 2 2 2];
 options.varcv = [1 1];
+w0 = [0 wtrend wseas wseas wseas wseas wseas wseas];
 dlm = dlmfit(yy,ss,w0,[],[],X,options);
 Sampling these parameters:
 name   start [min,max] N(mu,s^2)
@@ -876,17 +896,17 @@ w3: -4.60517 [-Inf,Inf] N(-4.60517,1^2)
 
 woptv =
 
-   Empty matrix: 1-by-0
+  1x0 empty double row vector
 
 
 woptw =
 
-    0.0047214     0.073985
+    0.0042701     0.096897
 
 
 woptg =
 
-   Empty matrix: 1-by-0
+  1x0 empty double row vector
 #+end_example
 
 Still not happy with the result. Next thing to try is to use an autoregressive component. This usually can explain some non-modelled feature, on the cost of possibly explaining some unknown systematic effects with correlated noise.
@@ -908,9 +928,9 @@ dlm = dlmfit(yy,ss,w0,[],[],X,options);
 options = struct('trig',3,'mcmc',1,'nsimu',2000);
 options.arphi = 0.4;
 options.winds = [0 1 2 2 2 2 2 2 3];
+options.varcv = [1 1 1];
 options.fitar = 1;
 options.gcv = [1];
-options.varcv = [1 1 1];
 war = 0.4;
 w0 = [0 wtrend wseas wseas wseas wseas wseas wseas war];
 dlm = dlmfit(yy,ss,w0,[],[],X,options);
@@ -923,17 +943,17 @@ g1: 0.4 [0,1] N(0.4,1^2)
 
 woptv =
 
-   Empty matrix: 1-by-0
+  1x0 empty double row vector
 
 
 woptw =
 
-   0.00075325      0.01268      0.32044
+   0.00099304     0.013988      0.37175
 
 
 woptg =
 
-      0.36489
+      0.34958
 #+end_example
 
 Plot the fit and the residual diagnostics.
@@ -957,10 +977,10 @@ Plot the fit and the residual diagnostics.
 #+BEGIN_SRC matlab :exports none :results none
 figure(1);
 setfonts
-pngfile('img/ozonedemo1c.png',1); % goes to home directory?
+pngfile('img/ozonedemo1c.png',1,1);
 figure(2);
 setfonts
-pngfile('img/ozonedemo2c.png',1); % goes to home directory?
+pngfile('img/ozonedemo2c.png',1,1);
 #+END_SRC
 
 #+CAPTION: Stratospheric ozone trends
@@ -976,6 +996,7 @@ Also, to illustrate, we draw dome sample realizations of the level component ove
 #+BEGIN_SRC matlab
   nsam = 200; % number of sampled to draw from the posterior
   dlm_sample = dlmsmosam(dlm,nsam);
+  figure(1)
   hold on
   for i=1:5:nsam
     plot(time,ys*squeeze(dlm_sample(1,:,i)),'-')
@@ -986,6 +1007,7 @@ Also, to illustrate, we draw dome sample realizations of the level component ove
 #+RESULTS:
 : nsam = 200; % number of sampled to draw from the posterior
 : dlm_sample = dlmsmosam(dlm,nsam);
+: figure(1)
 : hold on
 : for i=1:5:nsam
 :   plot(time,ys*squeeze(dlm_sample(1,:,i)),'-')
@@ -994,7 +1016,7 @@ Also, to illustrate, we draw dome sample realizations of the level component ove
 
 #+BEGIN_SRC matlab :exports none :results none
 setfonts
-pngfile('img/ozonedemo3.png',1);
+pngfile('img/ozonedemo3.png',1,1);
 #+END_SRC
 #+CAPTION: Simulated samples of the level component
 #+NAME: fig:ozonedemo3
@@ -1014,7 +1036,7 @@ the unknown parameters, three from the diagonal of model error matrix $W$ and on
 
 #+BEGIN_SRC matlab :exports none :results none
 setfonts
-pngfile('img/ozonedemo4.png',1);
+pngfile('img/ozonedemo4.png',1,1);
 #+END_SRC
 #+CAPTION: Parameter prior and posterior from MCMC chain
 #+NAME: fig:ozonedemo4
@@ -1023,21 +1045,23 @@ pngfile('img/ozonedemo4.png',1);
 
 Next, we sample trend statistics form the  DLM sample. Calculate 10 year (+-5) running trend for each model state sample in =dlm_sample=, collect the results and plot 95% probability region of our uncertainty about the decadal trend.
 #+BEGIN_SRC matlab
+nyear = 10;
 tsamp = ys*squeeze(dlm_sample(1,:,:)); % sample of levels
-ysm = mean(mean(tsamp'));              % their mean
-ysf = 1/(ysm*10)*100;                  % scale factor to get % change / 10 year
-t10 = mean((tsamp(6*13:end,:)-tsamp(1:end-6*13+1,:))')*ysf; % mean trend
-s10 = std((tsamp(6*13:end,:)-tsamp(1:end-6*13+1,:))')*ysf;  % std in the sample
-time10 = time(3*13:end); time10 = time10(1:length(t10)); % time axis for plot
+ysm = mean(tsamp(:));                   % their mean
+ysf = 1/(ysm*nyear)*100;      % scale factor to get % change / 10 year
+t10 = mean((tsamp(nyear*12+1:end,:)-tsamp(1:end-nyear*12,:))')*ysf; % mean trend
+s10 = std((tsamp(nyear*12+1:end,:)-tsamp(1:end-nyear*12,:))')*ysf;  % std in the sample
+time10 = time(fix(nyear/2)*12+1:end); time10 = time10(1:length(t10)); % time axis for plot
 #+END_SRC
 
 #+RESULTS:
+: nyear = 10;
 : tsamp = ys*squeeze(dlm_sample(1,:,:)); % sample of levels
-: ysm = mean(mean(tsamp'));              % their mean
-: ysf = 1/(ysm*10)*100;                  % scale factor to get % change / 10 year
-: t10 = mean((tsamp(6*13:end,:)-tsamp(1:end-6*13+1,:))')*ysf; % mean trend
-: s10 = std((tsamp(6*13:end,:)-tsamp(1:end-6*13+1,:))')*ysf;  % std in the sample
-: time10 = time(3*13:end); time10 = time10(1:length(t10)); % time axis for plot
+: ysm = mean(tsamp(:));                   % their mean
+: ysf = 1/(ysm*nyear)*100;      % scale factor to get % change / 10 year
+: t10 = mean((tsamp(nyear*12+1:end,:)-tsamp(1:end-nyear*12,:))')*ysf; % mean trend
+: s10 = std((tsamp(nyear*12+1:end,:)-tsamp(1:end-nyear*12,:))')*ysf;  % std in the sample
+: time10 = time(fix(nyear/2)*12+1:end); time10 = time10(1:length(t10)); % time axis for plot
 
 #+BEGIN_SRC matlab
 confband(time10,t10,s10);grid;
@@ -1055,7 +1079,7 @@ ylabel('% change / year')
 
 #+BEGIN_SRC matlab :exports none :results none
 setfonts
-pngfile('img/ozonedemo5.png',1);
+pngfile('img/ozonedemo5.png',1,1);
 #+END_SRC
 #+CAPTION: Ten year trend in ozone
 #+NAME: fig:ozonedemo5
