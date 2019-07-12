@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-11-21 Ke 09:41 -->
+<!-- 2019-07-12 Pe 22:21 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Dynamic linear model tutorial</title>
@@ -164,6 +164,19 @@
   .footdef  { margin-bottom: 1em; }
   .figure { padding: 1em; }
   .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
   .inlinetask {
     padding: 10px;
     border: 2px solid gray;
@@ -189,7 +202,7 @@
 @licstart  The following is the entire license notice for the
 JavaScript code in this tag.
 
-Copyright (C) 2012-2018 Free Software Foundation, Inc.
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
 
 The JavaScript code in this tag is free software: you can
 redistribute it and/or modify it under the terms of the GNU
@@ -260,16 +273,16 @@ for the JavaScript code in this tag.
  <a accesskey="H" href="http://helios.fmi.fi/~lainema/"> HOME </a>
 </div><div id="content">
 <h1 class="title">Dynamic linear model tutorial</h1>
-<div id="outline-container-org0b749ad" class="outline-2">
-<h2 id="org0b749ad"><span class="section-number-2">1</span> Dynamic linear models</h2>
+<div id="outline-container-orga5943e3" class="outline-2">
+<h2 id="orga5943e3"><span class="section-number-2">1</span> Dynamic linear models</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This text gives an introduction to using state space based dynamic regression analysis of time series. We are especially interested in extracting trends in climatic observations. The computer examples are given using my <a href="index.html">DLM toolbox</a> for Matlab.
 </p>
 </div>
 
-<div id="outline-container-org2d1668c" class="outline-3">
-<h3 id="org2d1668c"><span class="section-number-3">1.1</span> Introduction</h3>
+<div id="outline-container-org90ff0df" class="outline-3">
+<h3 id="org90ff0df"><span class="section-number-3">1.1</span> Introduction</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Statistical analysis of time series data is usually faced with the fact that we have only one realization of a process whose properties we might not fully understand. In analysis of correlation structures, for example, we need to assume that some distributional properties of the process generating the variability stay unchanged in time. In linear trend analysis, we assume that there is an underlying change in the background that stays approximately constant over time. Dynamic regression with state space approach tries to avoid some of the problems. By explicitly allowing for variability in the regression coefficients we let the system properties change in time. Furthermore, the use of unobservable state variables allows direct modelling of the processes that are driving the observed variability, such as seasonality or external forcing, and we can explicitly allow for some modelling error.
@@ -293,8 +306,8 @@ The use of DLMs in time series analysis is well documented in statistical litera
 </div>
 </div>
 
-<div id="outline-container-org1536e93" class="outline-3">
-<h3 id="org1536e93"><span class="section-number-3">1.2</span> State space description</h3>
+<div id="outline-container-orgb44da31" class="outline-3">
+<h3 id="orgb44da31"><span class="section-number-3">1.2</span> State space description</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 General dynamic linear model can be written with a help of observation
@@ -308,8 +321,8 @@ equation and model equation as
 \end{eqnarray*}
 
 <p>
-Above \(y_{t}\) are the observations at time \(t\), with \(t=1,\dots,n\).
-Vector \(x_{t}\) of length \(m\) contains the unobserved states of the system that are assumed to evolve in time according to a linear <i>system operator</i> \(G_{t}\) (a \(m\times m\) matrix). In time series settings \(x_t\) will have elements corresponding to various components of the  time series process, like trend, seasonality, etc. We observe a linear combination of the states with noise and matrix \(F_{t}\) (\(m\times p\)) is the <i>observation operator</i> that transforms the model states into observations.  Both observation end system equations can have additive Gaussian errors with covariance matrices \(V_{t}\) and \(W_{t}\).
+Above \(y_{t}\) are the \(p\) observations at time \(t\), with \(t=1,\dots,n\).
+Vector \(x_{t}\) of length \(m\) contains the unobserved states of the system that are assumed to evolve in time according to a linear <i>system operator</i> \(G_{t}\) (a \(m\times m\) matrix). In time series settings \(x_t\) will have elements corresponding to various components of the  time series process, like trend, seasonality, etc. We observe a linear combination of the states with noise and matrix \(F_{t}\) (\(p\times m\)) is the <i>observation operator</i> that transforms the model states into observations.  Both observation end system equations can have additive Gaussian errors with covariance matrices \(V_{t}\) and \(W_{t}\).
 </p>
 
 <p>
@@ -319,8 +332,8 @@ As we are dealing with linear models, we assume that the operators \(G_{t}\) and
 </div>
 </div>
 
-<div id="outline-container-org2d35225" class="outline-3">
-<h3 id="org2d35225"><span class="section-number-3">1.3</span> DLM as hierarchical statistical model</h3>
+<div id="outline-container-orgd70d444" class="outline-3">
+<h3 id="orgd70d444"><span class="section-number-3">1.3</span> DLM as hierarchical statistical model</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 The DLM formulation can be seen as a special case of a general hierarchical statistical model with three levels: data, process and parameters (see e.g. Cressie). In terms of statistical distributions we have, first, the observations uncertainty \(p(y_{t}|x_{t},\theta)\) described by the observation equation. Second, the process uncertainty of the unknown states \(x_{t}\) and their evolution given by the process equations as \(p(x_{t}|\theta)\), and third, the uncertainty related to model parameters \(p(\theta)\). These conditional formulations allows both efficient description of the system and computational tools to estimate its components. It also combines different statistical approaches, as we can have full prior probabilities for the unknowns (Bayesian approach), estimate them by maximum likelihood and plug them back (frequentistic approach), or even fix the model parameters by expert knowledge (a trivial non statistical approach).
@@ -328,8 +341,8 @@ The DLM formulation can be seen as a special case of a general hierarchical stat
 </div>
 </div>
 
-<div id="outline-container-org8b2ee83" class="outline-3">
-<h3 id="org8b2ee83"><span class="section-number-3">1.4</span> State and parameter estimation</h3>
+<div id="outline-container-org639480a" class="outline-3">
+<h3 id="org639480a"><span class="section-number-3">1.4</span> State and parameter estimation</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 Recall that \(y_{t}\) are the observations and \(x_{t}\) the hidden system states for \(t=1,\dots,n\). In addition, we have (static) model parameter \(\theta\) that contains auxiliary parameters needed in defining the model and observation errors \(W_{t}\) and \(V_{t}\) and the system matrices \(G_{t}\) and \(F_{t}\). For dynamic linear models we have efficient and well founded computational tools for all the relevant statistical distributions.
@@ -347,8 +360,8 @@ Recall that \(y_{t}\) are the observations and \(x_{t}\) the hidden system state
 </div>
 </div>
 
-<div id="outline-container-org6f40527" class="outline-3">
-<h3 id="org6f40527"><span class="section-number-3">1.5</span> Recursive Kalman formulas</h3>
+<div id="outline-container-orgf5d2b61" class="outline-3">
+<h3 id="orgf5d2b61"><span class="section-number-3">1.5</span> Recursive Kalman formulas</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 Here are the relevant parts of the recursive formulas for Kalman filter and smoother to estimate the marginal distributions of DLM states given the observations. We assume that the initial distributions at \(t=1\) are available.
@@ -383,15 +396,15 @@ Both these recursion are implemented in <code>dlmsmo.m</code> Matlab code.
 </div>
 </div>
 
-<div id="outline-container-orga6d4d9b" class="outline-3">
-<h3 id="orga6d4d9b"><span class="section-number-3">1.6</span> Simulation smoother</h3>
+<div id="outline-container-org274d36b" class="outline-3">
+<h3 id="org274d36b"><span class="section-number-3">1.6</span> Simulation smoother</h3>
 <div class="outline-text-3" id="text-1-6">
 <p>
 Kalman smoother algorithm provides the marginal distributions \(p(x_{t}|y_{1:n},\theta)\) for each \(t\). These are all Gaussian. However, for studying trends and other dynamic features in the system, we are interested in the joint distribution spanning the whole time range \(p(x_{1:n}|y_{1:n},\theta)\). Note that we are still conditioning on the unknown parameter vector \(\theta\) and will account for it later. This very high dimensional joint distribution is not easily accessible directly. As in many cases, instead of analytic expressions, it is more important to be able to draw realizations from the distribution.
 </p>
 
 <p>
-The system equations provide a direct way to recursively produce realizations of both the states \(x_{1:n}\) and the observations \(y_{1:n}\). However, the generated states will be independent of the original observations. It can be shown (<a href="#org415d25a">Durbin &amp; Koopman</a>, Section 4.9) that the residual process of generated vs.  smoothed state is independent of the \(\tilde{x}_{1:n}\) and \(\tilde{y}_{1:n}\). This means that if we add these residuals over the smoothed state \(x_{1:n}\), we get a new realization that is conditional on \(y_{1:n}\), the original observations. So to produce \({x}^*_{1:n} \sim p(x_{1:n}|y_{1:n},\theta)\), we:
+The system equations provide a direct way to recursively produce realizations of both the states \(x_{1:n}\) and the observations \(y_{1:n}\). However, the generated states will be independent of the original observations. It can be shown (<a href="#org04d2ab8">Durbin &amp; Koopman</a>, Section 4.9) that the residual process of generated vs.  smoothed state is independent of the \(\tilde{x}_{1:n}\) and \(\tilde{y}_{1:n}\). This means that if we add these residuals over the smoothed state \(x_{1:n}\), we get a new realization that is conditional on \(y_{1:n}\), the original observations. So to produce \({x}^*_{1:n} \sim p(x_{1:n}|y_{1:n},\theta)\), we:
 </p>
 
 <ol class="org-ol">
@@ -407,8 +420,8 @@ This simulation smoother will be used in trend studies and as a part of more gen
 </div>
 </div>
 
-<div id="outline-container-org5d7c4c3" class="outline-3">
-<h3 id="org5d7c4c3"><span class="section-number-3">1.7</span> Analysing trends</h3>
+<div id="outline-container-org9014d3b" class="outline-3">
+<h3 id="org9014d3b"><span class="section-number-3">1.7</span> Analysing trends</h3>
 <div class="outline-text-3" id="text-1-7">
 <p>
 In general terms, trend is some change in the distributional properties, such as in the mean, of the process generating the observations. We are typically interested in slowly varying changes in the background level, i.e.  in the mean process after known sources of variability, such as seasonality, have been accounted for.
@@ -425,12 +438,12 @@ Let \(x_{\mathrm{level},t}\) be the model state that defines the background leve
 </div>
 </div>
 
-<div id="outline-container-org01c9398" class="outline-3">
-<h3 id="org01c9398"><span class="section-number-3">1.8</span> Examples</h3>
+<div id="outline-container-org1318e7c" class="outline-3">
+<h3 id="org1318e7c"><span class="section-number-3">1.8</span> Examples</h3>
 <div class="outline-text-3" id="text-1-8">
 </div>
-<div id="outline-container-orge467c83" class="outline-4">
-<h4 id="orge467c83"><span class="section-number-4">1.8.1</span> Spline smoothing</h4>
+<div id="outline-container-org0e4609c" class="outline-4">
+<h4 id="org0e4609c"><span class="section-number-4">1.8.1</span> Spline smoothing</h4>
 <div class="outline-text-4" id="text-1-8-1">
 <p>
 A simple level and trend model can be used as a basis for many trend related studies. In terms of local level \(\mu_{t}\) and local trend \(\alpha_{t}\) it can be written as
@@ -465,7 +478,7 @@ with three parameters for the error variances
 \end{equation*}
 
 <p>
-It is interesting to note, that  the local level and trend model with \(\sigma^2_\mathrm{level} = 0\) and \(\lambda = \sigma^2_\mathrm{trend}/\sigma^2_\mathrm{obs} > 0\) is equivalent to cubic spline smoothing (<a href="#org415d25a">Durbin &amp; Koopman, 2012</a>) with smoothing parameter \(\lambda\).
+It is interesting to note, that  the local level and trend model with \(\sigma^2_\mathrm{level} = 0\) and \(\lambda = \sigma^2_\mathrm{trend}/\sigma^2_\mathrm{obs} > 0\) is equivalent to cubic spline smoothing (<a href="#org04d2ab8">Durbin &amp; Koopman, 2012</a>) with smoothing parameter \(\lambda\).
 </p>
 
 <p>
@@ -494,11 +507,11 @@ dlmplotfit(dlmfit(y,122,[0 1.65],[],[],[],options),t);
 </div>
 
 <p>
-Above we used known observation uncertainty standard deviation (\(\sigma_{\mathrm{obs}}=122\)) and known level and trend variability standard deviations ([0 1.65]). In later examples these values are estimated from the data. The Figure <a href="#orgf56c0ab">1</a> below shows the data together with estimated level component \(\mu_{1:n} = x_{\mathrm{level},1:n}\) and its 95% probability envelope, formed from individual probability limits.
+Above we used known observation uncertainty standard deviation (\(\sigma_{\mathrm{obs}}=122\)) and known level and trend variability standard deviations ([0 1.65]). In later examples these values are estimated from the data. The Figure <a href="#org6289dc2">1</a> below shows the data together with estimated level component \(\mu_{1:n} = x_{\mathrm{level},1:n}\) and its 95% probability envelope, formed from individual probability limits.
 </p>
 
 
-<div id="orgf56c0ab" class="figure">
+<div id="org6289dc2" class="figure">
 <p><img src="img/splinedemofit.png" alt="splinedemofit.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>DLM smoother fitted on Nile flow time series</p>
@@ -506,8 +519,8 @@ Above we used known observation uncertainty standard deviation (\(\sigma_{\mathr
 </div>
 </div>
 
-<div id="outline-container-orgc816eef" class="outline-4">
-<h4 id="orgc816eef"><span class="section-number-4">1.8.2</span> Classical linear regression</h4>
+<div id="outline-container-org19d8000" class="outline-4">
+<h4 id="org19d8000"><span class="section-number-4">1.8.2</span> Classical linear regression</h4>
 <div class="outline-text-4" id="text-1-8-2">
 <p>
 Linear regression without dynamical evolution of the regression components is a special case of DLM model, although using  DLM code to fit linear regression model is not the most efficient way to achieve this.
@@ -516,12 +529,12 @@ A non dynamic model is obtained by setting all model error variances to zero. Be
 
 <pre class="example">
 dlmplotfit(dlmfit(y,122,[0 0],[],[],[],options),t);
-
 </pre>
 
 
 
-<div id="orgecc7018" class="figure">
+
+<div id="org9abddf7" class="figure">
 <p><img src="img/splinedemofit2.png" alt="splinedemofit2.png" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Linear trend with DLM</p>
@@ -529,8 +542,8 @@ dlmplotfit(dlmfit(y,122,[0 0],[],[],[],options),t);
 </div>
 </div>
 
-<div id="outline-container-org54bb7de" class="outline-4">
-<h4 id="org54bb7de"><span class="section-number-4">1.8.3</span> Seasonal component</h4>
+<div id="outline-container-orgbeda1b1" class="outline-4">
+<h4 id="orgbeda1b1"><span class="section-number-4">1.8.3</span> Seasonal component</h4>
 <div class="outline-text-4" id="text-1-8-3">
 <p>
 For DLM time series models, we have two main ways to model seasonality. If ns is the number of seasons, then the <i>full seasonal model</i> has ns-1 components. The number is one smaller than the number of seasons, as the model typically has already a component for the mean level.
@@ -589,11 +602,11 @@ dlmplotfit(dlm,time);
 grid; datetick;
 xlabel('time'); ylabel('temperature [C]')
 title('Monthly temperatures at Kaisaniemi, Helsinki')
-
 </pre>
 
 
-<div id="org45e2c8b" class="figure">
+
+<div id="org7d9351e" class="figure">
 <p><img src="img/seasonaldemo.png" alt="seasonaldemo.png" />
 </p>
 <p><span class="figure-number">Figure 3: </span>Seasonal model on Kaisaniemi temperatures 2004-2013</p>
@@ -606,8 +619,8 @@ See also the ozone time series example.
 </div>
 </div>
 
-<div id="outline-container-org09b122d" class="outline-4">
-<h4 id="org09b122d"><span class="section-number-4">1.8.4</span> Autoregressive process</h4>
+<div id="outline-container-org451b5ad" class="outline-4">
+<h4 id="org451b5ad"><span class="section-number-4">1.8.4</span> Autoregressive process</h4>
 <div class="outline-text-4" id="text-1-8-4">
 <p>
 Autoregressive processes have serial dependence between the observations. For example, AR(3) process is defined by three coefficients \([\rho_{1},\rho_{2},\rho_{3}]\) and an independent innovation term \(\epsilon\) as
@@ -664,8 +677,8 @@ This representation allows the use of DLM code to to fit AR process and estimate
 </div>
 </div>
 
-<div id="outline-container-org7717c7a" class="outline-3">
-<h3 id="org7717c7a"><span class="section-number-3">1.9</span> Estimating the parameters</h3>
+<div id="outline-container-org4c18cf0" class="outline-3">
+<h3 id="org4c18cf0"><span class="section-number-3">1.9</span> Estimating the parameters</h3>
 <div class="outline-text-3" id="text-1-9">
 <p>
 In examples above, the variance parameters defining the model error covariance matrix \(W_t\) were assumed to be known. In practice we need some estimation methodology. Basically there are three alternatives. One. Use subject level knowledge with trial and error to fix the parameters without any algorithmic tuning. Two. Use the likelihood function with a numerical optimization routine to find maximum likelihood estimates of the parameters and plug the estimates back to the equations and re-fit the DLM model. Three. Use MCMC to sample from the posterior distribution of the parameters to estimate the parameters or to integrate out their uncertainty.
@@ -688,8 +701,8 @@ The <code>dlmfit</code> Matlab function has code for both maximum likelihood and
 </p>
 </div>
 
-<div id="outline-container-org6b37f57" class="outline-4">
-<h4 id="org6b37f57"><span class="section-number-4">1.9.1</span> Nile data again.</h4>
+<div id="outline-container-org03e5540" class="outline-4">
+<h4 id="org03e5540"><span class="section-number-4">1.9.1</span> Nile data again.</h4>
 <div class="outline-text-4" id="text-1-9-1">
 <p>
 Next, we use the Nile data and estimate the smoothness parameter \(\sigma_\mathrm{trend}\). By default the code displays the optimization iterations performed by <code>fminsearch</code>. The option <code>winds</code> contains the indexes of the diagonal of \(W\) that are to be optimized. For example, you can set <code>winds = [0 1 2 2 2 2]</code> to have one parameter for the second element and one common parameter for the elements 3 to 6. The input and output for the optimizer will be in square root scale, i.e.  as standard deviations, but the optimization is performed over logarithms of those to ensure positivity of the results.
@@ -730,8 +743,8 @@ ans =
 </div>
 </div>
 
-<div id="outline-container-org6f6ef8a" class="outline-4">
-<h4 id="org6f6ef8a"><span class="section-number-4">1.9.2</span> AR parameters</h4>
+<div id="outline-container-orgd4e14ab" class="outline-4">
+<h4 id="orgd4e14ab"><span class="section-number-4">1.9.2</span> AR parameters</h4>
 <div class="outline-text-4" id="text-1-9-2">
 <p>
 In this example we use Kalman filter likelihood to fit parameters in the process evolution matrix \(G\). Take the residuals from the last DLM run and fit AR(1) model. For numerical stability you have to set some small non zero observation variance (this might change in the next version). This functionality in now build into <code>dlmfit</code>, also. The same idea can be used to estimate any parameter in model definition using the Kalman filter likelihood.
@@ -759,12 +772,12 @@ phiopt =
 </div>
 </div>
 
-<div id="outline-container-org789e392" class="outline-2">
-<h2 id="org789e392"><span class="section-number-2">2</span> Toolbox functions</h2>
+<div id="outline-container-orgc82c4fe" class="outline-2">
+<h2 id="orgc82c4fe"><span class="section-number-2">2</span> Toolbox functions</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org1a4b857" class="outline-3">
-<h3 id="org1a4b857"><span class="section-number-3">2.1</span> Function <code>dlmsmo</code></h3>
+<div id="outline-container-org32b5568" class="outline-3">
+<h3 id="org32b5568"><span class="section-number-3">2.1</span> Function <code>dlmsmo</code></h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-matlab">out = dlmsmo(y,F,V,x0,G,W,C0,X, sample);
@@ -882,8 +895,8 @@ The function <code>dlmsmo</code> is called by <code>dlmfit</code> that contains 
 </div>
 </div>
 
-<div id="outline-container-org28d2122" class="outline-3">
-<h3 id="org28d2122"><span class="section-number-3">2.2</span> Function <code>dlmfit</code></h3>
+<div id="outline-container-org1ce63c7" class="outline-3">
+<h3 id="org1ce63c7"><span class="section-number-3">2.2</span> Function <code>dlmfit</code></h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
 <pre class="src src-matlab">out = dlmfit(y,s,w,x0,C0,X,options);
@@ -966,8 +979,8 @@ If you need to estimate something else than the diagonal of \(W\), then you can 
 </div>
 </div>
 
-<div id="outline-container-org7af7701" class="outline-3">
-<h3 id="org7af7701"><span class="section-number-3">2.3</span> Function <code>dlmgensys</code></h3>
+<div id="outline-container-org3098b09" class="outline-3">
+<h3 id="org3098b09"><span class="section-number-3">2.3</span> Function <code>dlmgensys</code></h3>
 <div class="outline-text-3" id="text-2-3">
 <div class="org-src-container">
 <pre class="src src-matlab">[G,F] = dlmgensys(options);
@@ -1036,8 +1049,8 @@ F =
 </div>
 </div>
 
-<div id="outline-container-org63902c7" class="outline-3">
-<h3 id="org63902c7"><span class="section-number-3">2.4</span> Function <code>dlmsmosam</code></h3>
+<div id="outline-container-orgef972b2" class="outline-3">
+<h3 id="orgef972b2"><span class="section-number-3">2.4</span> Function <code>dlmsmosam</code></h3>
 <div class="outline-text-3" id="text-2-4">
 <div class="org-src-container">
 <pre class="src src-matlab">sample = dlmsmosam(dlm,nsam);
@@ -1050,8 +1063,8 @@ Sample of states from DLM fit. Input: <code>dlm</code> fit object, <code>nsam</c
 </div>
 </div>
 
-<div id="outline-container-org7c45b96" class="outline-3">
-<h3 id="org7c45b96"><span class="section-number-3">2.5</span> Plotting functions</h3>
+<div id="outline-container-org260fafd" class="outline-3">
+<h3 id="org260fafd"><span class="section-number-3">2.5</span> Plotting functions</h3>
 <div class="outline-text-3" id="text-2-5">
 <div class="org-src-container">
 <pre class="src src-matlab">dlmplotfit(dlm, time, yscale, yind);
@@ -1071,15 +1084,15 @@ Input: <code>dlm</code> is output from <code>dlmfit</code>, <code>time</code> is
 
 <pre class="example">
 dlmplotdiag(dlm);
-
 </pre>
+
 
 <p>
 Plot residual diagnostics of DLM fit performed by <code>dlmsmo</code> or <code>dlmfit</code>.
 </p>
 
 
-<div id="org744a697" class="figure">
+<div id="org6affba0" class="figure">
 <p><img src="img/splinedemo_diag.png" alt="splinedemo_diag.png" />
 </p>
 <p><span class="figure-number">Figure 4: </span>Nile flow time series residual diagnostics</p>
@@ -1098,8 +1111,8 @@ Plot the MCMC chain used in estimation of model parameter in function <code>dlmf
 </div>
 </div>
 
-<div id="outline-container-org39d3f07" class="outline-2">
-<h2 id="org39d3f07"><span class="section-number-2">3</span> Ozone trend analysis</h2>
+<div id="outline-container-org89bd31b" class="outline-2">
+<h2 id="org89bd31b"><span class="section-number-2">3</span> Ozone trend analysis</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 To illustrate the DLM toolbox, we analyse univariate time series with local level and trend, seasonality and some proxy time series as regressors. The observations are remote sensing satellite data for stratospheric ozone. This example reproduces some of the calculations for article: M. Laine, N. Latva-Pukkila and E. Kyrölä: Analyzing time-varying trends in stratospheric ozone time series using state the space approach, <i>Atmospheric Chemistry and Physics</i> 14(18), 2014, <a href="http://dx.doi.org/10.5194/acp-14-9707-2014">doi: 10.5194/acp-14-9707-2014</a>.
@@ -1188,8 +1201,8 @@ time = data(:,1); % time in years from 1984 to 2012
 y = data(:,2); % ozone density [1/cm^3]
 s = data(:,3); % uncertainty standard deviation for y
 X = data(:,4:6); % proxies
-
 </pre>
+
 
 <p>
 We scale \(y\) for numerical stability.
@@ -1198,8 +1211,8 @@ We scale \(y\) for numerical stability.
 ys = stdnan(y);
 yy = y./ys;
 ss = s./ys;
-
 </pre>
+
 
 <p>
 Specify prior means for some components of \(W\), the model error matrix. The <code>w0</code> variable below has the square roots of the diagonal of \(W\) and it is given as an argument to <code>dlmfit</code>.
@@ -1209,8 +1222,8 @@ ym = meannan(yy);  % mean observations
 wtrend = abs(ym)*0.005/12; % trend std
 wseas  = 0.01;   % seasonal component std
 w0 = [0 wtrend wseas wseas wseas wseas];
-
 </pre>
+
 
 <p>
 Calculate the DLM smoother solution and do MCMC simulation over some components in the matrix \(W\). As we are doing MCMC analysis we need to specify Bayesian prior distributions for the unknown parameters. Now we have two of them, the trend standard deviation \(\sigma_\mathrm{trend}\) and the seasonal standard deviation \(\sigma_\mathrm{seas}\). By default, the estimation is done in logarithmic scale with Gaussian priors, i.e.  log-normal priors on the original scale. The prior means were already given above. Prior log-normal scale parameter is given with option <code>varcv</code> below. Value 1 means prior standard deviation that is approximately 100% on the original scale of the parameter.
@@ -1247,11 +1260,11 @@ Next, plot the fitted observations and the level component.
 <pre class="example">
 dlmplotfit(dlm, time, ys)
 title(label);xlabel('time');ylabel('average O3 density [cm^{-3}]')
-
 </pre>
 
 
-<div id="org0af87d7" class="figure">
+
+<div id="orge5f1fe4" class="figure">
 <p><img src="img/ozonedemo1.png" alt="ozonedemo1.png" />
 </p>
 <p><span class="figure-number">Figure 5: </span>Stratospheric ozone trends</p>
@@ -1262,11 +1275,11 @@ Some model diagnostic from the prediction residuals are plotted by <code>dlmplot
 </p>
 <pre class="example">
 dlmplotdiag(dlm, time, ys)
-
 </pre>
 
 
-<div id="org9917911" class="figure">
+
+<div id="org087baa1" class="figure">
 <p><img src="img/ozonedemo2.png" alt="ozonedemo2.png" />
 </p>
 <p><span class="figure-number">Figure 6: </span>Stratospheric ozone trends diagnostics</p>
@@ -1347,19 +1360,19 @@ dlmplotfit(dlm, time, ys)
 title(label);xlabel('time');ylabel('average O3 density [cm^{-3}]')
 figure(2); clf
 dlmplotdiag(dlm, time, ys)
-
 </pre>
 
 
 
-<div id="org4db3d91" class="figure">
+
+<div id="org00f257b" class="figure">
 <p><img src="img/ozonedemo1c.png" alt="ozonedemo1c.png" />
 </p>
 <p><span class="figure-number">Figure 7: </span>Stratospheric ozone trends</p>
 </div>
 
 
-<div id="org39c19cf" class="figure">
+<div id="orgfab404c" class="figure">
 <p><img src="img/ozonedemo2c.png" alt="ozonedemo2c.png" />
 </p>
 <p><span class="figure-number">Figure 8: </span>Stratospheric ozone trends diagnostics</p>
@@ -1378,11 +1391,11 @@ for i=1:5:nsam
   plot(time,ys*squeeze(dlm_sample(1,:,i)),'-')
 end
 hold off
-
 </pre>
 
 
-<div id="org6762991" class="figure">
+
+<div id="org03435c4" class="figure">
 <p><img src="img/ozonedemo3.png" alt="ozonedemo3.png" />
 </p>
 <p><span class="figure-number">Figure 9: </span>Simulated samples of the level component</p>
@@ -1390,18 +1403,18 @@ hold off
 
 
 <p>
-Next, Figure <a href="#org5be8431">10</a> shows prior and posterior probability distributions for
+Next, Figure <a href="#orgf3583c1">10</a> shows prior and posterior probability distributions for
 the unknown parameters, three from the diagonal of model error matrix \(W\) and one on \(G\) for autoregressive coefficient. The estimated posterior distributions look relatively well identified with respect to the priors, which mean that there is some information about the values of the parameters in the observations.
 </p>
 
 <pre class="example">
 mcmcplot(dlm.chain,[],dlm.res,'denspanel',2);
-
 </pre>
 
 
 
-<div id="org5be8431" class="figure">
+
+<div id="orgf3583c1" class="figure">
 <p><img src="img/ozonedemo4.png" alt="ozonedemo4.png" />
 </p>
 <p><span class="figure-number">Figure 10: </span>Parameter prior and posterior from MCMC chain</p>
@@ -1419,20 +1432,20 @@ ysf = 1/(ysm*nyear)*100;      % scale factor to get % change / 10 year
 t10 = mean((tsamp(nyear*12+1:end,:)-tsamp(1:end-nyear*12,:))')*ysf; % mean trend
 s10 = std((tsamp(nyear*12+1:end,:)-tsamp(1:end-nyear*12,:))')*ysf;  % std in the sample
 time10 = time(fix(nyear/2)*12+1:end); time10 = time10(1:length(t10)); % time axis for plot
-
 </pre>
+
 
 <pre class="example">
 confband(time10,t10,s10);grid;
 xlim([time(1),time(end)]); % match axis to other plots
 title('10 year trend');
 ylabel('% change / year')
-
 </pre>
 
 
 
-<div id="org630217a" class="figure">
+
+<div id="org9611389" class="figure">
 <p><img src="img/ozonedemo5.png" alt="ozonedemo5.png" />
 </p>
 <p><span class="figure-number">Figure 11: </span>Ten year trend in ozone</p>
@@ -1444,14 +1457,14 @@ As also seen from the fit plot with the observations and the estimated level, th
 </div>
 </div>
 
-<div id="outline-container-org8f91284" class="outline-2">
-<h2 id="org8f91284"><span class="section-number-2">4</span> References</h2>
+<div id="outline-container-orgf0e4c98" class="outline-2">
+<h2 id="orgf0e4c98"><span class="section-number-2">4</span> References</h2>
 <div class="outline-text-2" id="text-4">
 </div>
 
 
 <ol class="org-ol">
-<li><a id="org6e0debb"></a>A.C. Harvey. <a id="org428196c"></a><br />
+<li><a id="orgcadbe56"></a>A.C. Harvey. <a id="org1eb8d82"></a><br />
 <div class="outline-text-5" id="text-4-0-0-1">
 <p>
 <i>Forecasting, structural time series and the Kalman filter</i>.
@@ -1460,7 +1473,7 @@ Cambridge University Press, 1990.
 </div>
 </li>
 
-<li><a id="orgb2128eb"></a>T.J. Durbin and S.J. Koopman. <a id="org415d25a"></a><br />
+<li><a id="orgbf3a99e"></a>T.J. Durbin and S.J. Koopman. <a id="org04d2ab8"></a><br />
 <div class="outline-text-5" id="text-4-0-0-2">
 <p>
 <i>Time Series Analysis by State Space Methods</i>.
@@ -1469,7 +1482,7 @@ Oxford University  Press, second edition, 2012.
 </div>
 </li>
 
-<li><a id="org4ce6bc4"></a>G. Petris, S. Petrone, and P. Campagnoli. <a id="orgc842ea2"></a><br />
+<li><a id="orgc962718"></a>G. Petris, S. Petrone, and P. Campagnoli. <a id="orgb48933c"></a><br />
 <div class="outline-text-5" id="text-4-0-0-3">
 <p>
 <i>Dynamic Linear Models with R</i>. Springer, 2009.
@@ -1477,7 +1490,7 @@ Oxford University  Press, second edition, 2012.
 </div>
 </li>
 
-<li><a id="org5414ee4"></a>S. Särkkä. <a id="org9d952fc"></a><br />
+<li><a id="orge577420"></a>S. Särkkä. <a id="org2e7bac2"></a><br />
 <div class="outline-text-5" id="text-4-0-0-4">
 <p>
 <i>Bayesian Filtering and Smoothing</i>.
@@ -1486,7 +1499,7 @@ Cambridge University Press, 2013.
 </div>
 </li>
 
-<li><a id="org00cb559"></a>D. Gamerman. <a id="org54db21c"></a><br />
+<li><a id="orgc6b1413"></a>D. Gamerman. <a id="org97152d3"></a><br />
 <div class="outline-text-5" id="text-4-0-0-5">
 <p>
 <i>Markov chain Monte Carlo &#x2013; Stochastic simulation for Bayesian inference</i>.
@@ -1495,7 +1508,7 @@ Chapman &amp; Hall, second edition, 2006.
 </div>
 </li>
 
-<li><a id="orgf6f9207"></a>N. Cressie and C.K. Wikle. <a id="org67338cc"></a><br />
+<li><a id="orgc9c7e69"></a>N. Cressie and C.K. Wikle. <a id="org306682f"></a><br />
 <div class="outline-text-5" id="text-4-0-0-6">
 <p>
 <i>Statistics for Spatio-Temporal Data</i>.
@@ -1511,8 +1524,7 @@ Wiley, 2011.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Marko Laine</p>
-<p class="date">Created: 2018-11-21 Ke 09:41</p>
-<p class="validation"></p>
+<p class="date">Created: 2019-07-12 Pe 22:21</p>
 </div>
 </body>
 </html>

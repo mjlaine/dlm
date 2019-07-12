@@ -52,8 +52,8 @@ equation and model equation as
   x_{t} &=& G_{t}x_{t-1}+w_{t},\quad  w_{t}\sim N(0,W_{t}).
 \end{eqnarray*}
 
-Above $y_{t}$ are the observations at time $t$, with $t=1,\dots,n$.
-Vector $x_{t}$ of length $m$ contains the unobserved states of the system that are assumed to evolve in time according to a linear /system operator/ $G_{t}$ (a $m\times m$ matrix). In time series settings $x_t$ will have elements corresponding to various components of the  time series process, like trend, seasonality, etc. We observe a linear combination of the states with noise and matrix $F_{t}$ ($m\times p$) is the /observation operator/ that transforms the model states into observations.  Both observation end system equations can have additive Gaussian errors with covariance matrices $V_{t}$ and $W_{t}$.
+Above $y_{t}$ are the $p$ observations at time $t$, with $t=1,\dots,n$.
+Vector $x_{t}$ of length $m$ contains the unobserved states of the system that are assumed to evolve in time according to a linear /system operator/ $G_{t}$ (a $m\times m$ matrix). In time series settings $x_t$ will have elements corresponding to various components of the  time series process, like trend, seasonality, etc. We observe a linear combination of the states with noise and matrix $F_{t}$ ($p\times m$) is the /observation operator/ that transforms the model states into observations.  Both observation end system equations can have additive Gaussian errors with covariance matrices $V_{t}$ and $W_{t}$.
 
 This formulation is quite general and flexible and it allows handling of many time series analysis problems in a single framework. Moreover, an unified computational tool can be used, i.e.\space a single DLM computer code can be used for various purposes. Below we give examples of different analyses.
 As we are dealing with linear models, we assume that the operators $G_{t}$ and $F_{t}$ are linear, i.e.\space matrices. However, they can change with the time index $t$. The state space framework can be extended to non linear model and non Gaussian errors, and to spatial-temporal analyses as well, see, e.g., Cressie.
